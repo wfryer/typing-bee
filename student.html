@@ -1,567 +1,838 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Typing Bee - Student</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Spelling Bee – Student Kiosk</title>
+<!-- Tailwind CSS via CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Fonts & Icons -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          sans: ['Plus Jakarta Sans', 'sans-serif'],
+          heading: ['Fredoka', 'sans-serif'],
+          mono: ['JetBrains Mono', 'monospace'],
+        },
+        colors: {
+          school: {
+            orange: '#fa8424',
+            'orange-hover': '#e07016',
+            'orange-light': '#fef3ea',
+            'orange-soft': '#fff8f3',
+            'orange-border': '#fcd2b2',
+            blue: '#1c1b9d',
+            'blue-dark': '#131273',
+            'blue-light': '#e8e8f8',
+            'blue-soft': '#f0f0fb',
+            'blue-border': '#b8b7e8',
+            slate: '#475569',
+            card: '#ffffff'
+          }
+        },
+        boxShadow: {
+          'school-sm': '0 2px 8px rgba(28, 27, 157, 0.06), 0 1px 2px rgba(250, 132, 36, 0.08)',
+          'school-md': '0 4px 16px rgba(28, 27, 157, 0.08), 0 2px 4px rgba(250, 132, 36, 0.1)',
+          'school-lg': '0 10px 25px -5px rgba(28, 27, 157, 0.12), 0 8px 10px -6px rgba(250, 132, 36, 0.12)',
         }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-            color: #333;
-        }
-        
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-        
-        .header {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        h1 {
-            color: #667eea;
-            margin-bottom: 10px;
-            font-size: 2.5em;
-        }
-        
-        .join-form {
-            background: white;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-        
-        .form-group {
-            margin-bottom: 25px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: 600;
-            color: #555;
-            font-size: 1.1em;
-        }
-        
-        input[type="text"] {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #e1e8ed;
-            border-radius: 8px;
-            font-size: 1.1em;
-            transition: border-color 0.3s ease;
-        }
-        
-        input[type="text"]:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-        
-        button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            font-size: 1.2em;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-            width: 100%;
-        }
-        
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
-        }
-        
-        button:active {
-            transform: translateY(0);
-        }
-        
-        button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        .game-area {
-            background: white;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-        
-        .waiting-message {
-            text-align: center;
-            padding: 60px 20px;
-        }
-        
-        .waiting-message h2 {
-            color: #667eea;
-            font-size: 2em;
-            margin-bottom: 20px;
-        }
-        
-        .waiting-message p {
-            color: #666;
-            font-size: 1.2em;
-        }
-        
-        .pulse {
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-        
-        .stats-bar {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .stat-box {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-        }
-        
-        .stat-value {
-            font-size: 2.5em;
-            font-weight: bold;
-            color: #667eea;
-            margin-bottom: 5px;
-        }
-        
-        .stat-label {
-            color: #666;
-            font-size: 0.9em;
-        }
-        
-        .sentence-container {
-            background: #f8f9fa;
-            padding: 30px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            border-left: 5px solid #667eea;
-        }
-        
-        .sentence {
-            font-size: 1.5em;
-            line-height: 1.8;
-            font-family: 'Courier New', monospace;
-            letter-spacing: 1px;
-        }
-        
-        .sentence .correct {
-            color: #28a745;
-            background: #d4edda;
-        }
-        
-        .sentence .incorrect {
-            color: #dc3545;
-            background: #f8d7da;
-        }
-        
-        .sentence .current {
-            background: #fff3cd;
-            border-bottom: 3px solid #667eea;
-        }
-        
-        .typing-area {
-            margin-bottom: 20px;
-        }
-        
-        #typingInput {
-            width: 100%;
-            padding: 20px;
-            border: 3px solid #667eea;
-            border-radius: 10px;
-            font-size: 1.3em;
-            font-family: 'Courier New', monospace;
-            letter-spacing: 1px;
-        }
-        
-        #typingInput:disabled {
-            background: #e9ecef;
-            cursor: not-allowed;
-        }
-        
-        .results-screen {
-            text-align: center;
-            padding: 40px;
-        }
-        
-        .results-screen h2 {
-            color: #28a745;
-            font-size: 2.5em;
-            margin-bottom: 30px;
-        }
-        
-        .results-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .result-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
-            border-radius: 10px;
-        }
-        
-        .result-value {
-            font-size: 3em;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        
-        .result-label {
-            font-size: 1.2em;
-            opacity: 0.9;
-        }
-        
-        .error-message {
-            background: #f8d7da;
-            color: #721c24;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border-left: 5px solid #dc3545;
-        }
-        
-        .hidden {
-            display: none;
-        }
-        
-        @media (max-width: 768px) {
-            .stats-bar {
-                grid-template-columns: 1fr;
-            }
-            
-            .results-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .sentence {
-                font-size: 1.2em;
-            }
-            
-            #typingInput {
-                font-size: 1.1em;
-            }
-        }
-    </style>
+      }
+    }
+  }
+</script>
+<style>
+  :root {
+    --bg-main: #fffcf8;
+    --primary-orange: #fa8424;
+    --primary-blue: #1c1b9d;
+  }
+  body {
+    background-color: var(--bg-main);
+    color: #1e293b;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    min-height: 100vh;
+    min-height: 100dvh;
+    background-image:
+      radial-gradient(#fa8424 0.75px, transparent 0.75px),
+      radial-gradient(#1c1b9d 0.75px, #fffcf8 0.75px);
+    background-size: 24px 24px;
+    background-position: 0 0, 12px 12px;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .safe-padding {
+    padding-top: max(0.75rem, env(safe-area-inset-top));
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+    padding-left: max(0.75rem, env(safe-area-inset-left));
+    padding-right: max(0.75rem, env(safe-area-inset-right));
+  }
+  .school-card {
+    background: #ffffff;
+    border: 2px solid #fcd2b2;
+    border-radius: 1.25rem;
+    box-shadow: 0 10px 25px -5px rgba(28, 27, 157, 0.08), 0 8px 10px -6px rgba(250, 132, 36, 0.08);
+  }
+  .recessed-orange {
+    background: #fef3ea;
+    border: 1.5px solid #fcd2b2;
+    border-radius: 0.85rem;
+  }
+  .recessed-blue {
+    background: #f0f0fb;
+    border: 1.5px solid #b8b7e8;
+    border-radius: 0.85rem;
+  }
+  .timer-bezel {
+    background: #131273;
+    border: 3px solid #b8b7e8;
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.4);
+    position: relative;
+  }
+  .timer-digit {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    text-shadow: 0 0 12px currentColor;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+  }
+  .timer-normal { color: #38bdf8; }
+  .timer-warning { color: #f59e0b; }
+  .timer-critical {
+    color: #f43f5e;
+    animation: pulse-critical 0.8s infinite alternate;
+  }
+  .timer-paused {
+    color: #94a3b8;
+    animation: none !important;
+    text-shadow: none;
+  }
+  @keyframes pulse-critical {
+    from { opacity: 1; transform: scale(1); }
+    to { opacity: 0.85; transform: scale(1.02); }
+  }
+  .btn-school-orange {
+    background-color: #fa8424;
+    color: #ffffff;
+    border-bottom: 4px solid #be5d0b;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+    transition: all 0.1s ease;
+  }
+  .btn-school-orange:hover:not(:disabled) {
+    background-color: #fc933d;
+    transform: translateY(-1px);
+  }
+  .btn-school-orange:active:not(:disabled) {
+    transform: translateY(3px);
+    border-bottom-width: 1px;
+  }
+  .btn-school-orange:disabled {
+    background-color: #cbd5e1;
+    border-bottom-color: #94a3b8;
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  .btn-school-blue {
+    background-color: #1c1b9d;
+    color: #ffffff;
+    border-bottom: 4px solid #131273;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+    transition: all 0.1s ease;
+  }
+  .btn-school-blue:hover:not(:disabled) {
+    background-color: #2726b8;
+    transform: translateY(-1px);
+  }
+  .btn-school-blue:active:not(:disabled) {
+    transform: translateY(3px);
+    border-bottom-width: 1px;
+  }
+  .kiosk-input {
+    background: #ffffff;
+    border: 2px solid #fcd2b2;
+    color: #1c1b9d;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .kiosk-input:focus {
+    border-color: #fa8424;
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(250, 132, 36, 0.15);
+  }
+  .kiosk-input:disabled {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+    color: #94a3b8;
+    cursor: not-allowed;
+  }
+  .custom-scroll::-webkit-scrollbar { width: 5px; }
+  .custom-scroll::-webkit-scrollbar-track {
+    background: #fef3ea;
+    border-radius: 8px;
+  }
+  .custom-scroll::-webkit-scrollbar-thumb {
+    background: #fcd2b2;
+    border-radius: 8px;
+  }
+  .custom-scroll::-webkit-scrollbar-thumb:hover { background: #fa8424; }
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+  .status-dot-active {
+    background-color: #34d399;
+    box-shadow: 0 0 8px #34d399;
+  }
+  .status-dot-inactive {
+    background-color: #f87171;
+    box-shadow: 0 0 8px #f87171;
+  }
+  .avatar-preview {
+    width: 80px;
+    height: 80px;
+    border-radius: 1rem;
+    border: 3px solid #fcd2b2;
+    background: #fef3ea;
+    object-fit: cover;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .avatar-preview:hover {
+    border-color: #fa8424;
+    box-shadow: 0 0 0 4px rgba(250, 132, 36, 0.15);
+  }
+  .style-chip {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.3rem 0.5rem;
+    border-radius: 9999px;
+    border: 1.5px solid #b8b7e8;
+    background: #f0f0fb;
+    color: #1c1b9d;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+  .style-chip:hover {
+    border-color: #fa8424;
+    background: #fef3ea;
+  }
+  .style-chip.active {
+    background: #fa8424;
+    border-color: #be5d0b;
+    color: #fff;
+  }
+  .player-avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 0.5rem;
+    border: 1.5px solid #b8b7e8;
+    object-fit: cover;
+    background: #f0f0fb;
+    flex-shrink: 0;
+  }
+  .player-avatar-lg {
+    width: 32px;
+    height: 32px;
+    border-radius: 0.5rem;
+  }
+
+  /* Paused overlay */
+  #paused-overlay {
+    background: rgba(19, 18, 115, 0.88);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+  .pause-icon-bounce {
+    animation: pauseBounce 1.4s ease-in-out infinite;
+  }
+  @keyframes pauseBounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+  }
+</style>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>⌨️ Typing Bee</h1>
-        </div>
-        
-        <!-- Join View -->
-        <div id="joinView" class="join-form">
-            <div class="form-group">
-                <label for="playerName">Your Name</label>
-                <input type="text" id="playerName" placeholder="Enter your name" maxlength="20">
-            </div>
-            <div class="form-group">
-                <label for="gameCode">Game Code</label>
-                <input type="text" id="gameCode" placeholder="Enter 6-digit code" maxlength="6" style="text-transform: uppercase;">
-            </div>
-            <div id="errorMessage" class="error-message hidden"></div>
-            <button onclick="joinGame()">Join Game</button>
-        </div>
-        
-        <!-- Waiting View -->
-        <div id="waitingView" class="game-area hidden">
-            <div class="waiting-message pulse">
-                <h2>✓ You're In!</h2>
-                <p>Waiting for teacher to start the race...</p>
-            </div>
-        </div>
-        
-        <!-- Game View -->
-        <div id="gameView" class="game-area hidden">
-            <div class="stats-bar">
-                <div class="stat-box">
-                    <div class="stat-value" id="wpmDisplay">0</div>
-                    <div class="stat-label">WPM</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-value" id="accuracyDisplay">100</div>
-                    <div class="stat-label">Accuracy %</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-value" id="progressDisplay">0</div>
-                    <div class="stat-label">Progress %</div>
-                </div>
-            </div>
-            
-            <div class="sentence-container">
-                <div class="sentence" id="sentenceDisplay"></div>
-            </div>
-            
-            <div class="typing-area">
-                <input 
-                    type="text" 
-                    id="typingInput" 
-                    placeholder="Type here when the race starts..."
-                    disabled
-                    autocomplete="off"
-                    autocorrect="off"
-                    autocapitalize="off"
-                    spellcheck="false"
-                >
-            </div>
-        </div>
-        
-        <!-- Results View -->
-        <div id="resultsView" class="game-area hidden">
-            <div class="results-screen">
-                <h2>🏆 Race Complete!</h2>
-                <div class="results-grid">
-                    <div class="result-card">
-                        <div class="result-value" id="finalWpm">0</div>
-                        <div class="result-label">Words Per Minute</div>
-                    </div>
-                    <div class="result-card">
-                        <div class="result-value" id="finalAccuracy">0</div>
-                        <div class="result-label">Accuracy %</div>
-                    </div>
-                </div>
-                <p style="color: #666; font-size: 1.2em;">Check the teacher's screen for final rankings!</p>
-            </div>
-        </div>
+<body class="safe-padding flex flex-col items-center justify-center min-h-screen min-h-[100dvh] w-full">
+
+  <!-- PAUSED OVERLAY (covers everything while teacher has paused the game) -->
+  <div id="paused-overlay" class="hidden fixed inset-0 z-50 flex flex-col items-center justify-center text-center p-6">
+    <div class="pause-icon-bounce w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-amber-400 text-school-blue-dark flex items-center justify-center text-6xl shadow-2xl mb-5 border-b-4 border-amber-600">
+      <i class="bi bi-pause-fill"></i>
     </div>
-    
-    <script>
-        let ws;
-        let playerId = null;
-        let currentGameCode = null;
-        let sentence = '';
-        let startTime = null;
-        let currentPosition = 0;
-        let correctChars = 0;
-        let totalChars = 0;
-        let gameStarted = false;
-        
-        function connectWebSocket() {
-            const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-            const wsHost = window.location.hostname || 'localhost';
-            const wsUrl = `${wsProtocol}//${wsHost}:8001`;
-            console.log('Connecting to WebSocket:', wsUrl);
-            ws = new WebSocket(wsUrl);
-            
-            ws.onopen = () => {
-                console.log('Connected to server');
-            };
-            
-            ws.onmessage = (event) => {
-                const data = JSON.parse(event.data);
-                handleServerMessage(data);
-            };
-            
-            ws.onerror = (error) => {
-                console.error('WebSocket error:', error);
-            };
-            
-            ws.onclose = () => {
-                console.log('Disconnected from server');
-                setTimeout(connectWebSocket, 2000);
-            };
-        }
-        
-        function handleServerMessage(data) {
-            if (data.type === 'joined') {
-                playerId = data.player_id;
-                currentGameCode = document.getElementById('gameCode').value.toUpperCase();
-                sentence = data.game_state.sentence;
-                
-                document.getElementById('joinView').classList.add('hidden');
-                document.getElementById('waitingView').classList.remove('hidden');
-            } else if (data.type === 'error') {
-                showError(data.message);
-            } else if (data.type === 'game_state') {
-                if (data.game_state.started && !gameStarted) {
-                    startRace(data.game_state.sentence);
-                }
-            }
-        }
-        
-        function joinGame() {
-            const playerName = document.getElementById('playerName').value.trim();
-            const gameCode = document.getElementById('gameCode').value.trim().toUpperCase();
-            
-            if (!playerName) {
-                showError('Please enter your name');
-                return;
-            }
-            
-            if (!gameCode || gameCode.length !== 6) {
-                showError('Please enter a valid 6-digit game code');
-                return;
-            }
-            
-            ws.send(JSON.stringify({
-                action: 'join_game',
-                game_code: gameCode,
-                player_name: playerName
-            }));
-        }
-        
-        function startRace(sentenceText) {
-            gameStarted = true;
-            sentence = sentenceText;
-            startTime = Date.now();
-            
-            document.getElementById('waitingView').classList.add('hidden');
-            document.getElementById('gameView').classList.remove('hidden');
-            
-            renderSentence();
-            
-            const input = document.getElementById('typingInput');
-            input.disabled = false;
-            input.focus();
-            input.addEventListener('input', handleTyping);
-        }
-        
-        function renderSentence() {
-            const sentenceDiv = document.getElementById('sentenceDisplay');
-            const input = document.getElementById('typingInput').value;
-            
-            let html = '';
-            for (let i = 0; i < sentence.length; i++) {
-                let className = '';
-                if (i < input.length) {
-                    className = input[i] === sentence[i] ? 'correct' : 'incorrect';
-                } else if (i === input.length) {
-                    className = 'current';
-                }
-                html += `<span class="${className}">${sentence[i]}</span>`;
-            }
-            
-            sentenceDiv.innerHTML = html;
-        }
-        
-        function handleTyping(e) {
-            const input = e.target.value;
-            currentPosition = input.length;
-            
-            renderSentence();
-            calculateStats();
-            
-            // Check if completed
-            if (input === sentence) {
-                completeRace();
-            } else {
-                // Send progress update
-                sendProgressUpdate(false);
-            }
-        }
-        
-        function calculateStats() {
-            const input = document.getElementById('typingInput').value;
-            
-            // Calculate WPM
-            const timeElapsed = (Date.now() - startTime) / 1000 / 60; // in minutes
-            const wordsTyped = input.length / 5; // standard: 5 chars = 1 word
-            const wpm = timeElapsed > 0 ? Math.round(wordsTyped / timeElapsed) : 0;
-            
-            // Calculate accuracy
-            let correct = 0;
-            for (let i = 0; i < input.length; i++) {
-                if (input[i] === sentence[i]) {
-                    correct++;
-                }
-            }
-            const accuracy = input.length > 0 ? Math.round((correct / input.length) * 100) : 100;
-            
-            // Calculate progress
-            const progress = Math.round((input.length / sentence.length) * 100);
-            
-            // Update display
-            document.getElementById('wpmDisplay').textContent = wpm;
-            document.getElementById('accuracyDisplay').textContent = accuracy;
-            document.getElementById('progressDisplay').textContent = progress;
-            
-            return { wpm, accuracy, progress };
-        }
-        
-        function sendProgressUpdate(completed) {
-            const stats = calculateStats();
-            
-            ws.send(JSON.stringify({
-                action: 'update_progress',
-                game_code: currentGameCode,
-                player_id: playerId,
-                progress: stats.progress,
-                wpm: stats.wpm,
-                accuracy: stats.accuracy,
-                completed: completed
-            }));
-        }
-        
-        function completeRace() {
-            const input = document.getElementById('typingInput');
-            input.disabled = true;
-            
-            const stats = calculateStats();
-            
-            // Send completion update
-            sendProgressUpdate(true);
-            
-            // Show results
-            document.getElementById('finalWpm').textContent = stats.wpm;
-            document.getElementById('finalAccuracy').textContent = stats.accuracy + '%';
-            
-            document.getElementById('gameView').classList.add('hidden');
-            document.getElementById('resultsView').classList.remove('hidden');
-        }
-        
-        function showError(message) {
-            const errorDiv = document.getElementById('errorMessage');
-            errorDiv.textContent = message;
-            errorDiv.classList.remove('hidden');
-            setTimeout(() => {
-                errorDiv.classList.add('hidden');
-            }, 3000);
-        }
-        
-        // Allow Enter key to join
-        document.getElementById('gameCode').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') joinGame();
-        });
-        
-        document.getElementById('playerName').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') joinGame();
-        });
-        
-        // Connect on page load
-        connectWebSocket();
-    </script>
+    <h2 class="text-3xl sm:text-5xl font-bold font-heading uppercase tracking-widest text-white">GAME PAUSED</h2>
+    <p class="text-amber-300 font-mono font-bold mt-3 text-xs sm:text-sm tracking-wider uppercase">
+      Your teacher paused the game. Please wait…
+    </p>
+    <p class="text-school-blue-border font-sans text-[11px] sm:text-xs mt-2">Your timer is stopped and your typed answer is safe.</p>
+  </div>
+
+  <!-- TOP BRANDING / HEADER BAR -->
+  <header class="w-full max-w-xl mb-3 flex items-center justify-between gap-2 px-3 sm:px-4 py-2.5 sm:py-3 bg-school-blue text-white rounded-2xl shadow-school-md border-b-4 border-school-blue-dark">
+    <div class="flex items-center gap-2.5 min-w-0">
+      <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-white p-1 flex items-center justify-center shadow-md shrink-0 border border-school-blue-border">
+        <img src="mes_logo.png" alt="MES Logo" id="mes-logo" class="h-6 w-6 sm:h-8 sm:w-8 object-contain" onerror="this.style.display='none'; document.getElementById('logo-fallback').classList.remove('hidden');" />
+        <div id="logo-fallback" class="hidden text-school-orange text-lg sm:text-xl font-bold flex items-center justify-center">
+          <i class="bi bi-award-fill"></i>
+        </div>
+      </div>
+      <div class="min-w-0">
+        <h1 class="text-xs sm:text-lg font-bold font-heading uppercase tracking-wide text-white leading-tight truncate flex flex-wrap items-center gap-x-1.5">
+          <span>MaterA Matibay</span>
+          <span class="text-amber-300 font-normal text-[10px] sm:text-xs">| SPELLING BEE</span>
+        </h1>
+      </div>
+    </div>
+    <div class="bg-school-blue-dark/80 px-2.5 py-1 rounded-xl flex items-center gap-1.5 border border-school-blue-border/30 shrink-0">
+      <span id="conn-dot" class="status-dot status-dot-inactive"></span>
+      <p class="text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-wide text-rose-300 whitespace-nowrap" id="conn-status">CONNECTING...</p>
+    </div>
+  </header>
+
+  <!-- MAIN KIOSK CONTAINER -->
+  <main class="w-full max-w-xl flex-1 flex flex-col justify-center">
+
+    <!-- 1. JOIN SCREEN -->
+    <div id="join" class="school-card p-4 sm:p-6 space-y-4 sm:space-y-5 border-t-4 border-t-school-orange">
+      <div class="bg-school-orange text-white -mx-4 -mt-4 sm:-mx-6 sm:-mt-6 p-3.5 sm:p-4 rounded-t-xl flex justify-between items-center border-b-2 border-school-blue-dark">
+        <h2 class="text-xs sm:text-base font-bold font-heading tracking-wider flex items-center gap-2">
+          <i class="bi bi-person-workspace text-school-blue text-sm sm:text-base"></i>
+          STUDENT TERMINAL ACCESS
+        </h2>
+        <span class="text-[9px] sm:text-[10px] font-mono font-bold uppercase bg-white/10 px-2 py-0.5 sm:py-1 rounded-md text-school-blue-border shrink-0">STATUS: READY</span>
+      </div>
+
+      <div class="space-y-3 sm:space-y-4 pt-1">
+        <!-- Avatar Picker -->
+        <div class="recessed-blue p-3 sm:p-4 rounded-xl">
+          <label class="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-school-blue font-sans mb-2 sm:mb-3 text-center">
+            Choose Your Avatar
+          </label>
+          <div class="flex flex-col sm:flex-row items-center gap-3 sm:gap-4">
+            <div class="flex flex-col items-center gap-1.5 shrink-0">
+              <img id="avatar-preview" class="avatar-preview" alt="Your avatar"
+                   src="https://api.dicebear.com/9.x/avataaars/svg?seed=Student&size=128" />
+              <button type="button" id="btn-random-seed"
+                      class="text-[10px] font-bold uppercase tracking-wide text-school-orange hover:text-school-orange-hover flex items-center gap-1">
+                <i class="bi bi-shuffle"></i> Randomize
+              </button>
+            </div>
+            <div class="flex-1 w-full">
+              <p class="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">Style</p>
+              <div id="style-chips" class="flex flex-wrap gap-1 justify-center sm:justify-start"></div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-school-blue font-sans mb-1">Student Name</label>
+          <input id="name" placeholder="ENTER YOUR FULL NAME" maxlength="20" autocomplete="off"
+                 class="kiosk-input w-full px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl text-sm sm:text-base font-bold uppercase font-sans placeholder-slate-400">
+        </div>
+        <div>
+          <label class="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-school-blue font-sans mb-1">Access Game Code</label>
+          <input id="code" placeholder="ABC123" maxlength="6" autocomplete="off"
+                 style="text-transform:uppercase; letter-spacing:0.15em;"
+                 class="kiosk-input w-full px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl text-xl sm:text-2xl font-mono font-extrabold tracking-widest text-school-blue text-center placeholder-slate-300 uppercase">
+        </div>
+        <button id="btn-join" class="btn-school-orange w-full py-3 sm:py-3.5 text-white font-extrabold text-base sm:text-lg tracking-wider uppercase rounded-xl flex items-center justify-center gap-2 shadow-school-md min-h-[48px]">
+          <i class="bi bi-box-arrow-in-right text-lg sm:text-xl"></i>
+          <span>CONNECT TO LOBBY</span>
+        </button>
+        <p class="msg text-center text-xs font-bold text-rose-500 font-sans min-h-[1.25rem] my-0" id="join-msg"></p>
+      </div>
+      <div class="bg-school-orange-light border border-school-orange-border p-2.5 sm:p-3 rounded-xl text-center">
+        <p class="text-[10px] sm:text-[11px] text-slate-600 font-medium">Please enter your assigned student name and room code from your teacher dashboard.</p>
+      </div>
+    </div>
+
+    <!-- 2. LOBBY SCREEN -->
+    <div id="lobby" class="school-card p-4 sm:p-6 space-y-4 sm:space-y-5 hidden border-t-4 border-t-school-orange">
+      <div class="bg-school-orange text-white -mx-4 -mt-4 sm:-mx-6 sm:-mt-6 p-3.5 sm:p-4 rounded-t-xl flex justify-between items-center border-b-2 border-school-blue-dark">
+        <h2 class="text-xs sm:text-base font-bold font-heading tracking-wider flex items-center gap-2">
+          <i class="bi bi-broadcast text-emerald-400 animate-pulse text-sm sm:text-base"></i>
+          LOBBY HOLDING BAY
+        </h2>
+        <span class="text-[9px] sm:text-[10px] font-mono font-bold text-emerald-300 bg-emerald-900/40 px-2 py-0.5 sm:py-1 rounded-md border border-emerald-500/30 shrink-0">CONNECTED</span>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2 sm:gap-3 recessed-blue p-2.5 sm:p-3 rounded-xl border border-school-blue-border">
+        <div class="text-center border-r border-school-blue-border/60 pr-2 flex flex-col items-center gap-1 min-w-0">
+          <span class="text-[9px] sm:text-[10px] font-sans font-bold text-slate-500 uppercase block truncate">Student Terminal</span>
+          <div class="flex items-center gap-1.5 justify-center min-w-0">
+            <img id="my-avatar" class="player-avatar player-avatar-lg" alt="" src="" />
+            <strong id="my-name" class="text-xs sm:text-base font-bold text-school-blue truncate">---</strong>
+          </div>
+        </div>
+        <div class="text-center pl-2 min-w-0">
+          <span class="text-[9px] sm:text-[10px] font-sans font-bold text-slate-500 uppercase block truncate">Room Code</span>
+          <strong id="lobby-code" class="text-xs sm:text-base font-mono font-black text-school-orange block truncate">------</strong>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-school-blue font-heading mb-2 flex items-center justify-between">
+          <span>Active Contestants</span>
+          <span class="text-[9px] sm:text-[10px] font-mono text-slate-500 font-normal">LIVE FEED</span>
+        </h3>
+        <div id="player-list" class="custom-scroll max-h-40 sm:max-h-48 overflow-y-auto space-y-2 pr-1"></div>
+      </div>
+      <div class="recessed-orange p-2.5 sm:p-3 rounded-xl text-center">
+        <p class="msg text-[11px] sm:text-xs font-bold font-sans text-school-orange animate-pulse uppercase tracking-wider my-0 flex items-center justify-center gap-1.5" id="lobby-msg">
+          <i class="bi bi-hourglass-split"></i>
+          <span>Waiting for instructor to start match...</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- 3. PLAYING SCREEN -->
+    <div id="playing" class="school-card p-3.5 sm:p-6 space-y-3.5 sm:space-y-4 hidden border-t-4 border-t-school-orange">
+      <div class="flex justify-between items-center recessed-orange px-3 sm:px-4 py-2 rounded-xl">
+        <span class="text-[11px] sm:text-xs font-bold font-heading tracking-widest text-school-orange uppercase flex items-center gap-1.5">
+          <i class="bi bi-controller"></i> SPELLING ROUND
+        </span>
+        <div class="text-[11px] sm:text-xs font-mono font-bold text-school-blue">
+          ROUND <span id="round-num" class="text-school-orange text-xs sm:text-sm font-black">--</span>
+        </div>
+      </div>
+
+      <div class="timer-bezel rounded-2xl p-2.5 sm:p-4 text-center overflow-hidden">
+        <span id="timer-label" class="text-[9px] sm:text-[10px] font-mono uppercase tracking-widest text-slate-300 block mb-0.5">REMAINING ALLOCATED TIME</span>
+        <div class="timer timer-digit text-4xl sm:text-7xl md:text-8xl py-1 sm:py-2 my-0.5 sm:my-1 timer-normal" id="time-left">
+          --
+        </div>
+      </div>
+
+      <div class="recessed-blue p-3 sm:p-4 rounded-xl space-y-1">
+        <div class="text-[9px] sm:text-[10px] font-bold font-heading uppercase tracking-widest text-school-blue flex items-center gap-1">
+          <i class="bi bi-lightbulb-fill text-school-orange"></i> CLUE TRANSMISSION
+        </div>
+        <div class="hint text-xs sm:text-sm font-medium leading-relaxed whitespace-pre-wrap font-sans text-slate-700" id="hint"></div>
+      </div>
+
+      <div id="answer-box" class="space-y-2.5 sm:space-y-3 pt-0.5">
+        <div>
+          <label class="block text-[10px] sm:text-xs font-bold uppercase tracking-wider text-school-blue font-sans mb-1">Your Spelling Answer</label>
+          <input id="answer" placeholder="Type word here..." autocomplete="off" autocapitalize="off" spellcheck="false"
+                 class="kiosk-input w-full px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl text-lg sm:text-2xl font-bold font-mono tracking-wide text-school-blue">
+        </div>
+        <button id="btn-answer" class="btn-school-orange w-full py-3 sm:py-3.5 text-white font-extrabold text-sm sm:text-lg tracking-wider uppercase rounded-xl shadow-school-md flex items-center justify-center gap-2 min-h-[48px]">
+          <i class="bi bi-send-fill text-base sm:text-lg"></i>
+          <span>SUBMIT ANSWER</span>
+        </button>
+      </div>
+
+      <div id="answered-msg" class="msg hidden bg-emerald-50 border-2 border-emerald-300 text-emerald-800 p-3.5 sm:p-4 rounded-xl text-center font-bold font-sans text-xs sm:text-sm shadow-sm">
+        <i class="bi bi-check-circle-fill text-emerald-600 text-base mr-1"></i>
+        <span>ANSWER LOCKED & TRANSMITTED – STAND BY FOR RESULTS</span>
+      </div>
+    </div>
+
+    <!-- 4. ROUND RESULT SCREEN -->
+    <div id="result" class="school-card p-4 sm:p-6 space-y-3.5 sm:space-y-4 hidden border-t-4 border-t-emerald-500">
+      <div class="bg-school-blue text-white -mx-4 -mt-4 sm:-mx-6 sm:-mt-6 p-3.5 sm:p-4 rounded-t-xl flex justify-between items-center border-b-2 border-school-blue-dark">
+        <h2 class="text-xs sm:text-base font-bold font-heading tracking-wider flex items-center gap-2">
+          <i class="bi bi-clipboard-data text-amber-300 text-sm sm:text-base"></i>
+          ROUND DEBRIEF
+        </h2>
+        <span class="text-[9px] sm:text-[10px] font-mono font-bold text-cyan-300 bg-cyan-900/40 px-2 py-0.5 sm:py-1 rounded-md border border-cyan-500/30 shrink-0">EVALUATION</span>
+      </div>
+      <div class="recessed-orange p-3 sm:p-4 rounded-xl text-center space-y-0.5">
+        <span class="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-slate-500 block">CORRECT SPELLING</span>
+        <strong id="correct-word" class="text-xl sm:text-3xl font-black text-school-blue font-mono tracking-widest uppercase block break-all">---</strong>
+      </div>
+      <div>
+        <h3 class="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-school-blue font-heading mb-2">Participant Performance</h3>
+        <div id="result-list" class="custom-scroll max-h-40 sm:max-h-52 overflow-y-auto space-y-2 pr-1"></div>
+      </div>
+      <div class="recessed-blue p-2.5 rounded-xl text-center">
+        <p class="msg text-[11px] sm:text-xs font-bold font-sans text-school-blue uppercase my-0 flex items-center justify-center gap-1.5">
+          <i id="next-round-spinner" class="bi bi-arrow-repeat text-school-orange animate-spin inline-block"></i>
+          <span>NEXT ROUND INITIALIZING SHORTLY…</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- 5. GAME OVER / FINAL RANKING SCREEN -->
+    <div id="over" class="school-card p-4 sm:p-6 space-y-4 sm:space-y-5 hidden border-t-4 border-t-school-orange">
+      <div class="bg-school-blue text-white -mx-4 -mt-4 sm:-mx-6 sm:-mt-6 p-3.5 sm:p-4 rounded-t-xl text-center border-b-2 border-school-blue-dark">
+        <h2 class="text-base sm:text-lg font-black font-heading tracking-widest text-amber-300 uppercase flex items-center justify-center gap-2">
+          <i class="bi bi-trophy-fill text-amber-400"></i>
+          FINAL TOURNAMENT RANKING
+        </h2>
+      </div>
+      <div class="recessed-orange p-2.5 sm:p-3.5 rounded-xl">
+        <ol id="ranking" class="custom-scroll max-h-48 sm:max-h-64 overflow-y-auto space-y-2 pr-1 text-xs sm:text-sm font-bold font-sans"></ol>
+      </div>
+      <div class="text-center space-y-0.5">
+        <p class="msg text-xs sm:text-sm font-extrabold font-heading text-school-blue uppercase tracking-wider">COMPETITION CONCLUDED</p>
+        <p class="text-[11px] sm:text-xs text-slate-500 font-sans">Thank you for participating!</p>
+      </div>
+    </div>
+  </main>
+
+<script>
+const WS_URL = `ws://${location.hostname}:8001`;
+const DICEBEAR_STYLES = [
+  "avataaars", "bottts", "lorelei", "notionists",
+  "adventurer", "big-smile", "fun-emoji", "thumbs",
+  "identicon", "shapes"
+];
+
+let ws = null;
+let gameCode = null;
+let playerId = null;
+let myName = null;
+let myAvatarUrl = null;
+let reconnectTimer = null;
+let currentPhase = null;
+let isPaused = false;
+
+// Avatar state
+let selectedStyle = "avataaars";
+let avatarSeed = "Student";
+
+const $ = id => document.getElementById(id);
+
+function show(id) {
+  ["join","lobby","playing","result","over"].forEach(s =>
+    $(s).classList.toggle("hidden", s !== id));
+}
+
+function updateConnectionUI(connected) {
+  const connDot = $("conn-dot");
+  const connStatus = $("conn-status");
+  if (connected) {
+    connStatus.textContent = "CONNECTED ✓";
+    connStatus.className = "text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-wide text-emerald-300 whitespace-nowrap";
+    if (connDot) connDot.className = "status-dot status-dot-active";
+  } else {
+    connStatus.textContent = "DISCONNECTED";
+    connStatus.className = "text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-wide text-rose-300 whitespace-nowrap";
+    if (connDot) connDot.className = "status-dot status-dot-inactive";
+  }
+}
+
+function buildAvatarUrl(style, seed) {
+  const s = encodeURIComponent(seed || "player");
+  return `https://api.dicebear.com/9.x/${style}/svg?seed=${s}&size=128`;
+}
+
+function refreshAvatarPreview() {
+  const nameVal = ($("name").value.trim() || "Student");
+  if (avatarSeed === "Student" || avatarSeed === "") {
+    avatarSeed = nameVal;
+  }
+  const url = buildAvatarUrl(selectedStyle, avatarSeed);
+  $("avatar-preview").src = url;
+}
+
+function initStyleChips() {
+  const container = $("style-chips");
+  container.innerHTML = "";
+  DICEBEAR_STYLES.forEach(style => {
+    const chip = document.createElement("button");
+    chip.type = "button";
+    chip.className = "style-chip" + (style === selectedStyle ? " active" : "");
+    chip.textContent = style.replace(/-/g, " ");
+    chip.dataset.style = style;
+    chip.onclick = () => {
+      selectedStyle = style;
+      document.querySelectorAll(".style-chip").forEach(c => c.classList.remove("active"));
+      chip.classList.add("active");
+      refreshAvatarPreview();
+    };
+    container.appendChild(chip);
+  });
+}
+
+function randomSeed() {
+  const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+  let s = "";
+  for (let i = 0; i < 8; i++) s += chars[Math.floor(Math.random() * chars.length)];
+  avatarSeed = s;
+  refreshAvatarPreview();
+}
+
+function connect() {
+  ws = new WebSocket(WS_URL);
+  ws.onopen = () => {
+    updateConnectionUI(true);
+    if (reconnectTimer) { clearInterval(reconnectTimer); reconnectTimer = null; }
+  };
+  ws.onclose = () => {
+    updateConnectionUI(false);
+    if (!reconnectTimer) reconnectTimer = setInterval(connect, 2000);
+  };
+  ws.onerror = () => ws.close();
+  ws.onmessage = (ev) => handle(JSON.parse(ev.data));
+}
+
+function send(obj) {
+  if (ws && ws.readyState === 1) ws.send(JSON.stringify(obj));
+}
+
+function handle(msg) {
+  if (msg.type === "joined") {
+    playerId = msg.player_id;
+    const me = msg.game_state?.players?.[playerId];
+    if (me?.avatar) {
+      myAvatarUrl = me.avatar;
+      $("my-avatar").src = myAvatarUrl;
+    }
+    show("lobby");
+    $("my-name").textContent = myName;
+    $("lobby-code").textContent = gameCode;
+    renderState(msg.game_state);
+  }
+  else if (msg.type === "game_state") {
+    renderState(msg.game_state);
+  }
+  else if (msg.type === "error") {
+    // "Game is paused" is expected if someone submits at the instant of a pause; don't treat it as a join error
+    if (msg.message === "Game is paused") return;
+    $("join-msg").textContent = msg.message;
+  }
+}
+
+function updateBulkyTimerDisplay(timeLeft, paused = false) {
+  const timerEl = $("time-left");
+  if (!timerEl) return;
+  const base = "timer timer-digit py-1 sm:py-2 my-0.5 sm:my-1 ";
+  if (typeof timeLeft === "number") {
+    timerEl.textContent = timeLeft;
+    const size = "text-5xl sm:text-7xl md:text-8xl ";
+    if (paused) {
+      timerEl.className = base + size + "timer-paused";
+    } else if (timeLeft <= 5) {
+      timerEl.className = base + size + "timer-critical";
+    } else if (timeLeft <= 10) {
+      timerEl.className = base + size + "timer-warning";
+    } else {
+      timerEl.className = base + size + "timer-normal";
+    }
+  } else {
+    timerEl.textContent = timeLeft ?? "--";
+    timerEl.className = base + "text-3xl sm:text-5xl " + (paused ? "timer-paused" : "timer-normal");
+  }
+}
+
+function avatarImg(url, extraClass = "") {
+  if (!url) {
+    return `<div class="player-avatar ${extraClass} bg-school-blue text-white flex items-center justify-center font-bold text-[10px]">?</div>`;
+  }
+  return `<img class="player-avatar ${extraClass}" src="${url}" alt="" onerror="this.style.display='none'" />`;
+}
+
+// ---------------------------------------------------------------------------
+// PAUSE HANDLING
+// ---------------------------------------------------------------------------
+function applyPausedState(phase, paused) {
+  const active = ["countdown", "playing", "round_result"].includes(phase);
+  const nowPaused = !!(paused && active);
+  isPaused = nowPaused;
+
+  $("paused-overlay").classList.toggle("hidden", !nowPaused);
+
+  // Freeze the answer box
+  const input = $("answer");
+  const btn = $("btn-answer");
+  input.disabled = nowPaused;
+  btn.disabled = nowPaused;
+
+  // Timer label
+  $("timer-label").textContent = nowPaused ? "TIMER PAUSED" : "REMAINING ALLOCATED TIME";
+
+  // Stop the "next round" spinner while paused
+  const spinner = $("next-round-spinner");
+  if (spinner) spinner.classList.toggle("animate-spin", !nowPaused);
+
+  if (nowPaused) {
+    input.blur();
+  }
+}
+
+function renderState(s) {
+  if (!s) return;
+
+  // Auto-clear input text on round transitions
+  if (currentPhase !== s.phase) {
+    if (s.phase === "playing" || s.phase === "countdown") {
+      $("answer").value = "";
+    }
+    currentPhase = s.phase;
+  }
+
+  // Apply paused / resumed UI first
+  applyPausedState(s.phase, !!s.paused);
+
+  // Lobby player list with avatars
+  const players = Object.values(s.players || {});
+  $("player-list").innerHTML = players.map(p =>
+    `<div class="flex justify-between items-center recessed-blue p-2 sm:p-2.5 rounded-xl text-xs font-sans shadow-sm gap-2">
+      <div class="flex items-center gap-2 min-w-0">
+        ${avatarImg(p.avatar)}
+        <span class="font-bold text-school-blue truncate">${p.name}</span>
+      </div>
+      <span class="text-school-orange font-bold font-mono text-[11px] sm:text-xs shrink-0">${p.score} PTS</span>
+    </div>`
+  ).join("");
+
+  // Keep my avatar updated
+  if (playerId && s.players?.[playerId]?.avatar) {
+    myAvatarUrl = s.players[playerId].avatar;
+    $("my-avatar").src = myAvatarUrl;
+  }
+
+  if (s.phase === "lobby") {
+    show("lobby");
+  }
+  else if (s.phase === "countdown") {
+    show("playing");
+    updateBulkyTimerDisplay("READY...", !!s.paused);
+    $("hint").textContent = "PREPARE FOR SPELLING TRANSMISSION...";
+    $("answer-box").classList.add("hidden");
+    $("answered-msg").classList.add("hidden");
+  }
+  else if (s.phase === "playing") {
+    show("playing");
+    $("round-num").textContent = `${s.current_round} / ${s.total_rounds}`;
+    updateBulkyTimerDisplay(s.time_left, !!s.paused);
+    $("hint").textContent =
+      `DEFINITION: ${s.definition || ""}\n` +
+      `FIRST LETTER: [ ${s.first_letter || "?"} ]    LENGTH: [ ${s.letter_count || "?"} LETTERS ]`;
+    const me = Object.entries(s.players || {}).find(([id]) => id === playerId);
+    const answered = me && me[1].answered;
+    if (answered) {
+      $("answer-box").classList.add("hidden");
+      $("answered-msg").classList.remove("hidden");
+    } else {
+      $("answer-box").classList.remove("hidden");
+      $("answered-msg").classList.add("hidden");
+      // Don't steal focus while paused; refocus once resumed
+      if (!s.paused) $("answer").focus();
+    }
+  }
+  else if (s.phase === "round_result") {
+    show("result");
+    $("correct-word").textContent = (s.correct_word || "").toUpperCase();
+    const res = s.last_results || {};
+    $("result-list").innerHTML = Object.values(res).map(r =>
+      `<div class="flex items-center justify-between p-2 sm:p-2.5 rounded-xl font-sans text-xs border shadow-sm gap-2 ${
+        r.correct
+          ? 'bg-emerald-50 border-emerald-300 text-emerald-900'
+          : 'bg-rose-50 border-rose-300 text-rose-900'
+      }">
+        <div class="flex items-center gap-1.5 sm:gap-2 min-w-0">
+          ${avatarImg(r.avatar)}
+          <i class="bi ${r.correct ? 'bi-check-circle-fill text-emerald-600' : 'bi-x-circle-fill text-rose-500'} text-xs sm:text-sm shrink-0"></i>
+          <span class="font-bold text-school-blue truncate">${r.name}:</span>
+          <span class="italic text-slate-700 truncate">"${r.answer || '(NO RESPONSE)'}"</span>
+        </div>
+        <span class="font-bold text-school-orange font-mono text-[11px] sm:text-xs shrink-0">+${r.score} PTS</span>
+      </div>`
+    ).join("");
+  }
+  else if (s.phase === "game_over") {
+    show("over");
+    const getRankBadge = (idx) => {
+      if (idx === 0) return '🥇';
+      if (idx === 1) return '🥈';
+      if (idx === 2) return '🥉';
+      return `${idx + 1}.`;
+    };
+    const ranking = s.ranking || [];
+    $("ranking").innerHTML = ranking.map((entry, i) => {
+      const name = entry.name ?? entry[0] ?? "???";
+      const score = entry.score ?? entry[1] ?? 0;
+      const avatar = entry.avatar ?? null;
+      return `<li class="flex justify-between items-center bg-white border border-school-orange-border p-2.5 sm:p-3 rounded-xl shadow-sm my-1 gap-2">
+        <span class="flex items-center gap-2 text-school-blue min-w-0">
+          <span class="text-sm sm:text-base shrink-0">${getRankBadge(i)}</span>
+          ${avatarImg(avatar, "player-avatar-lg")}
+          <span class="truncate">${name}</span>
+        </span>
+        <span class="text-school-orange font-black font-mono shrink-0">${score} PTS</span>
+      </li>`;
+    }).join("");
+  }
+}
+
+// --- Event listeners ---
+$("btn-join").onclick = () => {
+  myName = $("name").value.trim();
+  gameCode = $("code").value.trim().toUpperCase();
+  if (!myName) { $("join-msg").textContent = "ENTER YOUR NAME"; return; }
+  if (!gameCode) { $("join-msg").textContent = "ENTER THE GAME CODE"; return; }
+
+  const seed = avatarSeed || myName;
+
+  send({
+    action: "join_game",
+    game_code: gameCode,
+    player_name: myName,
+    avatar_style: selectedStyle,
+    avatar_seed: seed,
+  });
+};
+
+$("btn-answer").onclick = () => {
+  if (isPaused) return;   // blocked while the teacher has paused
+  const answer = $("answer").value.trim();
+  if (!answer) return;
+  send({
+    action: "submit_answer",
+    game_code: gameCode,
+    player_id: playerId,
+    answer: answer,
+  });
+  $("answer").value = "";
+};
+
+// LIVE TYPING STREAMING: Transmit current text as user types
+$("answer").addEventListener("input", (e) => {
+  if (!gameCode || !playerId || isPaused) return;
+  send({
+    action: "live_typing",
+    game_code: gameCode,
+    player_id: playerId,
+    current_input: e.target.value
+  });
+});
+
+$("answer").addEventListener("keydown", e => {
+  if (e.key === "Enter" && !isPaused) $("btn-answer").click();
+});
+
+["name","code"].forEach(id => {
+  $(id).addEventListener("keydown", e => {
+    if (e.key === "Enter") $("btn-join").click();
+  });
+});
+
+$("name").addEventListener("input", () => {
+  const val = $("name").value.trim();
+  if (avatarSeed === "Student" || avatarSeed === val.slice(0, -1) || !avatarSeed) {
+    avatarSeed = val || "Student";
+  }
+  refreshAvatarPreview();
+});
+
+$("btn-random-seed").onclick = randomSeed;
+
+// Init
+initStyleChips();
+refreshAvatarPreview();
+connect();
+</script>
 </body>
 </html>

@@ -1,477 +1,1532 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Typing Bee - Teacher</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spelling Bee – MaterA Matibay Teacher Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          sans: ['Plus Jakarta Sans', 'sans-serif'],
+          heading: ['Fredoka', 'sans-serif'],
+          mono: ['JetBrains Mono', 'monospace'],
+        },
+        colors: {
+          school: {
+            orange: '#fa8424',
+            'orange-hover': '#e07016',
+            'orange-light': '#fef3ea',
+            'orange-soft': '#fff8f3',
+            'orange-border': '#fcd2b2',
+            blue: '#1c1b9d',
+            'blue-dark': '#131273',
+            'blue-light': '#e8e8f8',
+            'blue-soft': '#f0f0fb',
+            'blue-border': '#b8b7e8',
+            slate: '#475569',
+            card: '#ffffff'
+          }
+        },
+        boxShadow: {
+          'school-sm': '0 2px 8px rgba(28, 27, 157, 0.06), 0 1px 2px rgba(250, 132, 36, 0.08)',
+          'school-md': '0 4px 16px rgba(28, 27, 157, 0.08), 0 2px 4px rgba(250, 132, 36, 0.1)',
+          'school-lg': '0 10px 25px -5px rgba(28, 27, 157, 0.12), 0 8px 10px -6px rgba(250, 132, 36, 0.12)',
+          'tactile': '0 4px 0 #131273',
+          'tactile-orange': '0 4px 0 #b85b0d'
         }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-            color: #333;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .header {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        h1 {
-            color: #667eea;
-            margin-bottom: 10px;
-            font-size: 2.5em;
-        }
-        
-        .subtitle {
-            color: #666;
-            font-size: 1.1em;
-        }
-        
-        .game-controls {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            margin-bottom: 30px;
-        }
-        
-        .game-code-display {
-            text-align: center;
-            padding: 40px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 15px;
-            color: white;
-            margin-bottom: 20px;
-        }
-        
-        .game-code-display h2 {
-            font-size: 1.3em;
-            margin-bottom: 15px;
-            opacity: 0.9;
-        }
-        
-        .game-code {
-            font-size: 4em;
-            font-weight: bold;
-            letter-spacing: 8px;
-            font-family: 'Courier New', monospace;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-        
-        .url-display {
-            margin-top: 15px;
-            font-size: 1.2em;
-            opacity: 0.9;
-        }
-        
-        .sentence-display {
-            background: #f8f9fa;
-            padding: 25px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            border-left: 5px solid #667eea;
-        }
-        
-        .sentence-display h3 {
-            color: #667eea;
-            margin-bottom: 15px;
-        }
-        
-        .sentence-text {
-            font-size: 1.3em;
-            line-height: 1.6;
-            color: #333;
-        }
-        
-        button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            font-size: 1.1em;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        }
-        
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
-        }
-        
-        button:active {
-            transform: translateY(0);
-        }
-        
-        button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        .players-section {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-        
-        .players-section h2 {
-            color: #667eea;
-            margin-bottom: 20px;
-            font-size: 1.8em;
-        }
-        
-        .player-count {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            text-align: center;
-            font-size: 1.2em;
-            color: #666;
-        }
-        
-        .player-list {
-            display: grid;
-            gap: 15px;
-        }
-        
-        .player-card {
-            background: linear-gradient(to right, #f8f9fa 0%, #e9ecef 100%);
-            padding: 20px;
-            border-radius: 10px;
-            display: grid;
-            grid-template-columns: auto 1fr auto auto;
-            gap: 20px;
-            align-items: center;
-            transition: all 0.3s ease;
-            border-left: 5px solid #dee2e6;
-        }
-        
-        .player-card.completed {
-            border-left-color: #28a745;
-            background: linear-gradient(to right, #d4edda 0%, #c3e6cb 100%);
-        }
-        
-        .player-rank {
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #667eea;
-            min-width: 40px;
-        }
-        
-        .player-name {
-            font-size: 1.2em;
-            font-weight: 600;
-            color: #333;
-        }
-        
-        .player-stats {
-            display: flex;
-            gap: 20px;
-        }
-        
-        .stat {
-            text-align: center;
-        }
-        
-        .stat-value {
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #667eea;
-        }
-        
-        .stat-label {
-            font-size: 0.85em;
-            color: #666;
-            margin-top: 2px;
-        }
-        
-        .progress-bar-container {
-            width: 200px;
-            height: 10px;
-            background: #dee2e6;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-        
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-            transition: width 0.3s ease;
-            border-radius: 5px;
-        }
-        
-        .status-badge {
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            font-weight: 600;
-        }
-        
-        .status-waiting {
-            background: #fff3cd;
-            color: #856404;
-        }
-        
-        .status-typing {
-            background: #cce5ff;
-            color: #004085;
-        }
-        
-        .status-finished {
-            background: #d4edda;
-            color: #155724;
-        }
-        
-        .no-players {
-            text-align: center;
-            padding: 40px;
-            color: #999;
-            font-size: 1.1em;
-        }
-        
-        .hidden {
-            display: none;
-        }
-        
-        @media (max-width: 768px) {
-            .player-card {
-                grid-template-columns: 1fr;
-                gap: 10px;
-            }
-            
-            .game-code {
-                font-size: 2.5em;
-                letter-spacing: 4px;
-            }
-        }
-    </style>
+      }
+    }
+  }
+</script>
+<style>
+  :root {
+    --bg-main: #fffcf8;
+    --primary-orange: #fa8424;
+    --primary-blue: #1c1b9d;
+  }
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-main);
+    background-image:
+      radial-gradient(#fa8424 0.75px, transparent 0.75px),
+      radial-gradient(#1c1b9d 0.75px, #fffcf8 0.75px);
+    background-size: 30px 30px;
+    background-position: 0 0, 15px 15px;
+    color: #1e293b;
+    user-select: none;
+  }
+  .school-card {
+    background: #ffffff;
+    border: 2px solid #fcd2b2;
+    border-radius: 1rem;
+    box-shadow: 0 4px 16px rgba(28, 27, 157, 0.06);
+    transition: all 0.2s ease;
+  }
+  .school-card-blue {
+    background: #ffffff;
+    border: 2px solid #b8b7e8;
+    border-radius: 1rem;
+    box-shadow: 0 4px 16px rgba(28, 27, 157, 0.08);
+  }
+  .recessed-orange {
+    background: #fef3ea;
+    border: 1.5px solid #fcd2b2;
+    border-radius: 0.75rem;
+  }
+  .recessed-blue {
+    background: #f0f0fb;
+    border: 1.5px solid #b8b7e8;
+    border-radius: 0.75rem;
+  }
+  .btn-school-blue {
+    background-color: #1c1b9d;
+    color: #ffffff;
+    border-bottom: 4px solid #131273;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+    transition: all 0.1s ease;
+  }
+  .btn-school-blue:hover:not(:disabled) {
+    background-color: #2726b8;
+    transform: translateY(-1px);
+  }
+  .btn-school-blue:active:not(:disabled) {
+    transform: translateY(3px);
+    border-bottom-width: 1px;
+  }
+  .btn-school-orange {
+    background-color: #fa8424;
+    color: #ffffff;
+    border-bottom: 4px solid #be5d0b;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+    transition: all 0.1s ease;
+  }
+  .btn-school-orange:hover:not(:disabled) {
+    background-color: #fc933d;
+    transform: translateY(-1px);
+  }
+  .btn-school-orange:active:not(:disabled) {
+    transform: translateY(3px);
+    border-bottom-width: 1px;
+  }
+  .btn-school-green {
+    background-color: #10b981;
+    color: #ffffff;
+    border-bottom: 4px solid #047857;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+    transition: all 0.1s ease;
+  }
+  .btn-school-green:hover:not(:disabled) {
+    background-color: #34d399;
+    transform: translateY(-1px);
+  }
+  .btn-school-green:active:not(:disabled) {
+    transform: translateY(3px);
+    border-bottom-width: 1px;
+  }
+  .btn-school-danger {
+    background-color: #e11d48;
+    color: #ffffff;
+    border-bottom: 4px solid #9f1239;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+    transition: all 0.1s ease;
+  }
+  .btn-school-danger:hover:not(:disabled) {
+    background-color: #f43f5e;
+    transform: translateY(-1px);
+  }
+  .btn-school-danger:active:not(:disabled) {
+    transform: translateY(3px);
+    border-bottom-width: 1px;
+  }
+  .timer-ring-circle {
+    transition: stroke-dashoffset 1s linear, stroke 0.3s ease;
+  }
+  .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #fef3ea;
+    border-radius: 8px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #fcd2b2;
+    border-radius: 8px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #fa8424; }
+
+  .player-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 0.5rem;
+    border: 2px solid #b8b7e8;
+    object-fit: cover;
+    background: #f0f0fb;
+    flex-shrink: 0;
+  }
+  .player-avatar-lg {
+    width: 32px;
+    height: 32px;
+    border-radius: 0.55rem;
+  }
+
+  .terminal-box {
+    background-color: #0f172a;
+    border: 1.5px solid #1e293b;
+    border-radius: 0.65rem;
+    color: #38bdf8;
+    font-family: 'JetBrains Mono', monospace;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+  }
+  .terminal-cursor {
+    display: inline-block;
+    width: 8px;
+    height: 14px;
+    background-color: #38bdf8;
+    margin-left: 2px;
+    animation: blink 1s infinite;
+    vertical-align: middle;
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  body.is-paused .terminal-cursor { animation: none; opacity: 0.3; }
+  body.is-paused #timer-ring { stroke: #94a3b8 !important; }
+  .paused-banner {
+    animation: pausedPulse 1.6s ease-in-out infinite;
+  }
+  @keyframes pausedPulse {
+    0%, 100% { transform: translateX(-50%) scale(1); }
+    50% { transform: translateX(-50%) scale(1.04); }
+  }
+
+  .btn-remove {
+    width: 28px;
+    height: 28px;
+    border-radius: 0.5rem;
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+  }
+  .btn-remove:hover {
+    background: #fff1f2;
+    border-color: #fda4af;
+    color: #e11d48;
+  }
+  .btn-remove:active {
+    background: #ffe4e6;
+    color: #be123c;
+  }
+
+  /* ===== Modern Confirmation Modal ===== */
+  #confirm-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(6px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.22s ease;
+  }
+  #confirm-modal.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  #confirm-modal .modal-card {
+    background: #ffffff;
+    border: 2px solid #fcd2b2;
+    border-radius: 1.25rem;
+    box-shadow: 0 20px 40px -10px rgba(28, 27, 157, 0.18), 0 8px 16px -6px rgba(250, 132, 36, 0.12);
+    width: 100%;
+    max-width: 400px;
+    transform: scale(0.92) translateY(12px);
+    transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+    overflow: hidden;
+  }
+  #confirm-modal.show .modal-card {
+    transform: scale(1) translateY(0);
+  }
+  .modal-header-bar {
+    height: 6px;
+    background: linear-gradient(90deg, #fa8424, #e11d48);
+  }
+</style>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>🏆 Typing Bee</h1>
-            <p class="subtitle">Teacher Control Panel</p>
+<body class="min-h-screen lg:h-screen lg:overflow-hidden text-slate-800 antialiased flex flex-col justify-between p-2 sm:p-4 gap-3">
+  <audio id="bg-audio" loop preload="auto">
+    <source src="background.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- ===== CONFIRMATION MODAL (used for both Remove Player & Stop Match) ===== -->
+  <div id="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-card">
+      <div class="modal-header-bar"></div>
+      <div class="p-6 text-center">
+        <div id="modal-icon-wrap" class="w-14 h-14 rounded-2xl bg-rose-50 border-2 border-rose-200 text-rose-500 flex items-center justify-center mx-auto mb-4 text-2xl shadow-sm">
+          <i id="modal-icon" class="bi bi-person-x-fill"></i>
         </div>
-        
-        <div id="setupView" class="game-controls">
-            <button onclick="createGame()" style="display: block; margin: 0 auto; font-size: 1.3em; padding: 20px 60px;">
-                Create New Game
-            </button>
+        <h3 id="modal-title" class="text-lg font-bold font-heading text-school-blue uppercase tracking-wide mb-1">Remove Student?</h3>
+        <p id="modal-message" class="text-sm text-slate-600 font-sans leading-relaxed mb-6">
+          Are you sure you want to remove <strong id="modal-player-name" class="text-school-blue"></strong> from this session?
+        </p>
+        <div class="flex gap-3">
+          <button id="modal-cancel" class="btn-school-blue flex-1 py-3 rounded-xl text-sm flex items-center justify-center gap-2">
+            <i class="bi bi-x-lg"></i>
+            <span>CANCEL</span>
+          </button>
+          <button id="modal-confirm" class="btn-school-danger flex-1 py-3 rounded-xl text-sm flex items-center justify-center gap-2">
+            <i id="modal-confirm-icon" class="bi bi-trash3-fill"></i>
+            <span id="modal-confirm-label">REMOVE</span>
+          </button>
         </div>
-        
-        <div id="gameView" class="hidden">
-            <div class="game-controls">
-                <div class="game-code-display">
-                    <h2>Students Join With Code:</h2>
-                    <div class="game-code" id="gameCode">------</div>
-                    <div class="url-display" id="urlDisplay"></div>
-                </div>
-                
-                <div class="sentence-display">
-                    <h3>Sentence to Type:</h3>
-                    <div class="sentence-text" id="sentenceDisplay"></div>
-                </div>
-                
-                <div style="text-align: center;">
-                    <button id="startButton" onclick="startGame()" style="font-size: 1.3em; padding: 20px 60px;">
-                        Start Race
-                    </button>
-                    <button id="newRoundButton" onclick="newRound()" style="margin-left: 20px; background: #17a2b8; display: none;">
-                        New Round (Same Players)
-                    </button>
-                    <button onclick="resetGame()" style="margin-left: 20px; background: #dc3545;">
-                        Reset Everything
-                    </button>
-                </div>
-            </div>
-            
-            <div class="players-section">
-                <h2>Players</h2>
-                <div class="player-count">
-                    <span id="playerCount">0</span> players joined
-                </div>
-                <div id="playerList" class="player-list">
-                    <div class="no-players">Waiting for students to join...</div>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
-    
-    <script>
-        let ws;
-        let currentGameCode = null;
-        let gameStarted = false;
-        let players = {};
-        
-        function connectWebSocket() {
-            const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-            const wsHost = window.location.hostname || 'localhost';
-            const wsUrl = `${wsProtocol}//${wsHost}:8001`;
-            console.log('Connecting to WebSocket:', wsUrl);
-            ws = new WebSocket(wsUrl);
-            
-            ws.onopen = () => {
-                console.log('Connected to server');
-            };
-            
-            ws.onmessage = (event) => {
-                const data = JSON.parse(event.data);
-                handleServerMessage(data);
-            };
-            
-            ws.onerror = (error) => {
-                console.error('WebSocket error:', error);
-            };
-            
-            ws.onclose = () => {
-                console.log('Disconnected from server');
-                setTimeout(connectWebSocket, 2000);
-            };
-        }
-        
-        function handleServerMessage(data) {
-            if (data.type === 'game_created') {
-                currentGameCode = data.game_code;
-                document.getElementById('gameCode').textContent = data.game_code;
-                document.getElementById('sentenceDisplay').textContent = data.sentence;
-                document.getElementById('urlDisplay').textContent = 
-                    `Or visit: ${window.location.origin}/student.html`;
-                
-                document.getElementById('setupView').classList.add('hidden');
-                document.getElementById('gameView').classList.remove('hidden');
-            } else if (data.type === 'game_state') {
-                updateGameState(data.game_state);
-            }
-        }
-        
-        function createGame() {
-            ws.send(JSON.stringify({
-                action: 'create_game'
-            }));
-        }
-        
-        function startGame() {
-            if (Object.keys(players).length === 0) {
-                alert('Need at least one player to start!');
-                return;
-            }
-            
-            ws.send(JSON.stringify({
-                action: 'start_game',
-                game_code: currentGameCode
-            }));
-            
-            gameStarted = true;
-            document.getElementById('startButton').disabled = true;
-            document.getElementById('startButton').textContent = 'Race in Progress...';
-        }
-        
-        function resetGame() {
-            // Force a hard reload to clear all state
-            window.location.href = window.location.href;
-        }
-        
-        function newRound() {
-            // Create a new game without full page reload
-            gameStarted = false;
-            players = {};
-            document.getElementById('startButton').disabled = false;
-            document.getElementById('startButton').textContent = 'Start Race';
-            createGame();
-        }
-        
-        function checkGameComplete(gameState) {
-            // Check if all players have finished
-            const playerList = Object.values(gameState.players);
-            if (playerList.length > 0 && gameState.started) {
-                const allFinished = playerList.every(p => p.completed);
-                if (allFinished) {
-                    document.getElementById('startButton').textContent = '🏁 Race Complete!';
-                    document.getElementById('startButton').style.background = '#28a745';
-                    document.getElementById('newRoundButton').style.display = 'inline-block';
+  </div>
+
+  <div id="paused-banner" class="paused-banner hidden fixed top-24 left-1/2 -translate-x-1/2 z-50 bg-amber-400 text-school-blue-dark px-6 py-2.5 rounded-2xl shadow-school-lg border-b-4 border-amber-600 font-heading font-bold text-sm sm:text-base uppercase tracking-wider flex items-center gap-2.5 pointer-events-none" style="transform: translateX(-50%);">
+    <i class="bi bi-pause-circle-fill text-xl"></i>
+    <span>GAME PAUSED — students are frozen</span>
+  </div>
+
+  <header class="bg-school-blue text-white rounded-2xl px-4 py-3 flex items-center justify-between shadow-school-md border-b-4 border-school-blue-dark shrink-0">
+    <div class="flex items-center gap-3">
+      <div class="w-12 h-12 rounded-xl bg-white p-1.5 flex items-center justify-center shadow-md shrink-0 relative overflow-hidden border border-school-blue-border">
+        <img src="mes_logo.png" alt="MES Logo" id="mes-logo" class="w-full h-full object-contain" onerror="this.style.display='none'; document.getElementById('fallback-logo-icon').classList.remove('hidden');" />
+        <div id="fallback-logo-icon" class="hidden text-school-orange font-bold text-2xl flex items-center justify-center">
+          <i class="bi bi-award-fill"></i>
+        </div>
+      </div>
+      <div>
+        <h1 class="text-base sm:text-xl font-bold font-heading uppercase tracking-wide text-white leading-none mt-1 flex items-center gap-2">
+          MaterA Matibay<span class="text-amber-300 font-normal text-xs sm:text-sm">| SPELLING BEE KIOSK</span>
+        </h1>
+      </div>
+    </div>
+    <div class="flex items-center gap-2.5">
+      <button id="btn-pause" onclick="togglePause()" class="btn-school-orange hidden px-4 py-2 rounded-xl items-center gap-2 text-xs font-bold shadow-sm" title="Pause / Resume the game (Spacebar)">
+        <i id="pause-icon" class="bi bi-pause-fill text-white text-base"></i>
+        <span id="pause-label" class="font-sans text-xs">PAUSE</span>
+      </button>
+      <button id="sound-toggle" onclick="toggleAudio()" class="btn-school-orange px-3 py-2 rounded-xl flex items-center gap-2 text-xs font-bold shadow-sm" title="Toggle Audio Sound Effects">
+        <i id="sound-icon" class="bi bi-volume-up-fill text-white text-base"></i>
+        <span class="hidden md:inline font-sans text-xs">AUDIO: ON</span>
+      </button>
+      <div class="bg-school-blue-dark/80 px-3 py-1.5 rounded-xl flex items-center gap-2.5 border border-school-blue-border/30">
+        <div class="relative flex h-3 w-3 items-center justify-center">
+          <span id="conn-dot-ping" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+          <span id="conn-dot" class="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-400"></span>
+        </div>
+        <div class="flex flex-col text-left">
+          <span class="text-[8px] font-mono uppercase text-school-blue-border leading-none">SYSTEM LINK</span>
+          <span class="font-mono font-bold text-amber-300 text-[11px] leading-tight uppercase tracking-wider" id="conn-status">CONNECTING...</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="grid grid-cols-1 lg:grid-cols-12 gap-3 flex-1 min-h-0 h-full">
+    <div class="lg:col-span-7 flex flex-col gap-3 h-full min-h-0">
+
+      <section id="create-panel" class="school-card p-6 rounded-2xl text-center flex flex-col items-center justify-center gap-4 flex-1 bg-gradient-to-b from-school-orange-soft to-white">
+        <div class="w-16 h-16 rounded-2xl bg-school-orange-light border-2 border-school-orange-border flex items-center justify-center text-school-orange shadow-inner">
+          <i class="bi bi-rocket-takeoff-fill text-3xl"></i>
+        </div>
+        <div class="space-y-1.5 max-w-md mx-auto">
+          <h2 class="text-2xl font-bold font-heading text-school-blue uppercase tracking-wide">Initialize Game Session</h2>
+          <p class="msg text-xs text-slate-600 font-sans leading-relaxed">Start an active Spelling Bee room session so student terminals can connect to this live kiosk.</p>
+        </div>
+        <button id="btn-create" class="btn-school-orange text-white px-8 py-3.5 rounded-xl text-base flex items-center gap-2.5 shadow-school-md">
+          <i class="bi bi-play-circle-fill text-xl"></i>
+          <span>CREATE GAME SESSION</span>
+        </button>
+      </section>
+
+      <section id="control-panel" class="school-card p-3 sm:p-4 rounded-2xl flex flex-col gap-3 hidden shrink-0 bg-white border-t-4 border-t-school-orange">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
+          <div class="md:col-span-7 recessed-orange p-3 rounded-xl relative flex flex-col items-center justify-center border-l-4 border-l-school-orange">
+            <button id="btn-copy-code" onclick="copyGameCode()" class="btn-school-orange absolute top-2 right-2 text-white p-1.5 rounded-lg text-xs" title="Copy Room Code">
+              <i class="bi bi-copy"></i>
+            </button>
+            <span class="text-[10px] uppercase font-bold tracking-widest text-school-orange font-sans">STUDENT JOIN CODE</span>
+            <div class="code text-3xl sm:text-4xl font-extrabold tracking-widest text-school-blue font-mono leading-tight my-0.5" id="game-code">------</div>
+            <span class="text-[10px] text-slate-500 font-sans">Share this code with students on their terminals</span>
+          </div>
+          <div class="md:col-span-5 recessed-blue p-3 rounded-xl flex flex-col justify-between h-full gap-2">
+            <div class="flex items-center justify-between border-b border-school-blue-border/40 pb-1.5">
+              <span class="text-[11px] font-heading font-bold uppercase text-school-blue flex items-center gap-1.5">
+                <i class="bi bi-sliders text-school-orange"></i> QUICK CONFIG
+              </span>
+              <button id="btn-config" class="btn-school-blue text-[10px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1">
+                <i class="bi bi-check2-circle"></i>
+                <span>APPLY</span>
+              </button>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <label class="flex flex-col text-[10px] font-bold text-school-blue">
+                <span class="mb-0.5">ROUNDS:</span>
+                <input id="rounds" type="number" min="1" max="20" value="5" class="bg-white border-2 border-school-blue-border text-school-blue font-mono font-bold text-xs rounded-lg px-2 py-1 text-center focus:outline-none focus:border-school-orange">
+              </label>
+              <label class="flex flex-col text-[10px] font-bold text-school-blue">
+                <span class="mb-0.5">TIMER (S):</span>
+                <input id="timer" type="number" min="5" max="120" value="20" class="bg-white border-2 border-school-blue-border text-school-blue font-mono font-bold text-xs rounded-lg px-2 py-1 text-center focus:outline-none focus:border-school-orange">
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="btn-start" class="btn-school-orange flex-1 text-white py-3 px-4 rounded-xl text-sm flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+            <i class="bi bi-play-fill text-xl"></i>
+            <span>START MATCH</span>
+          </button>
+          <button id="btn-reset" class="btn-school-blue hidden py-3 px-4 rounded-xl text-sm flex items-center justify-center gap-2">
+            <i class="bi bi-arrow-counterclockwise text-base"></i>
+            <span>RESTART</span>
+          </button>
+        </div>
+        <p class="msg text-[11px] text-center text-school-orange font-bold font-sans min-h-[1.25rem] my-0 leading-tight" id="control-msg"></p>
+      </section>
+
+      <section id="game-panel" class="school-card p-3 sm:p-4 rounded-2xl flex flex-col gap-3 hidden flex-1 min-h-0 border-l-4 border-l-school-orange">
+        <div class="recessed-orange p-3 rounded-xl flex items-center justify-between gap-3">
+          <div class="flex items-center gap-2 font-heading font-bold text-sm text-school-blue">
+            <span class="px-3 py-1 rounded-lg bg-white border border-school-orange-border text-school-orange font-mono shadow-sm">
+              ROUND <span id="round-num" class="font-extrabold text-school-blue">-</span> / <span id="total-rounds" class="text-slate-500">-</span>
+            </span>
+          </div>
+          <div class="flex items-center gap-2">
+            <!-- STOP / RESTART button – visible while playing -->
+            <button id="btn-stop-game" onclick="requestStopMatch()" class="btn-school-danger px-3 py-1.5 rounded-lg text-[10px] font-bold flex items-center gap-1.5 shadow-sm" title="Stop current match and return to lobby">
+              <i class="bi bi-stop-circle-fill"></i>
+              <span>STOP / RESTART</span>
+            </button>
+            <span id="countdown-label" class="text-[10px] font-bold text-slate-500 uppercase tracking-wider hidden sm:inline">COUNTDOWN</span>
+            <div class="relative w-11 h-11 flex items-center justify-center">
+              <svg class="w-11 h-11 transform -rotate-90" viewBox="0 0 36 36">
+                <path class="text-school-orange-border" stroke-width="4" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                <path id="timer-ring" class="timer-ring-circle text-school-orange" stroke-dasharray="100, 100" stroke-dashoffset="0" stroke-linecap="round" stroke-width="4" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+              </svg>
+              <span class="timer absolute text-xs font-black font-mono text-school-blue" id="time-left">--</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="recessed-blue p-3.5 rounded-xl space-y-2 border-t-2 border-t-school-blue relative overflow-hidden">
+          <div class="flex items-center justify-between border-b border-school-blue-border/40 pb-1.5">
+            <span class="text-[10px] font-bold uppercase text-school-blue tracking-wider flex items-center gap-1.5">
+              <i class="bi bi-shield-lock-fill text-school-orange"></i> TARGET WORD (CONFIDENTIAL - TEACHER ONLY)
+            </span>
+            <span class="text-[9px] font-bold bg-school-orange text-white px-2 py-0.5 rounded-full uppercase">CONFIDENTIAL</span>
+          </div>
+          <div id="teacher-word" class="text-2xl sm:text-3xl font-black font-mono text-school-blue tracking-widest uppercase my-1"></div>
+          <div class="bg-white p-2.5 rounded-lg border border-school-blue-border/50 shadow-sm">
+            <span class="text-[9px] font-bold uppercase text-slate-400 block">STUDENT PROMPT DEFINITION:</span>
+            <p id="teacher-def" class="text-xs text-slate-700 italic font-sans leading-snug mt-0.5"></p>
+          </div>
+          <div class="flex items-center gap-2 pt-1">
+            <div class="flex-1 bg-white px-2.5 py-1.5 rounded-lg border border-school-blue-border/40 text-[11px] font-mono flex items-center justify-between shadow-sm">
+              <span class="text-slate-500 font-sans text-[10px]">STARTS WITH:</span>
+              <strong id="first-letter" class="text-school-blue font-bold uppercase text-xs"></strong>
+            </div>
+            <div class="flex-1 bg-white px-2.5 py-1.5 rounded-lg border border-school-blue-border/40 text-[11px] font-mono flex items-center justify-between shadow-sm">
+              <span class="text-slate-500 font-sans text-[10px]">LENGTH:</span>
+              <strong id="letter-count" class="text-school-blue font-bold text-xs"></strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex-1 min-h-0 flex flex-col gap-2">
+          <div class="flex items-center justify-between">
+            <h2 class="text-[11px] font-heading font-bold uppercase tracking-wider text-school-blue flex items-center gap-2">
+              <i class="bi bi-terminal-fill text-school-orange animate-pulse"></i> LIVE TERMINAL STREAMING
+            </h2>
+            <div class="flex items-center gap-2">
+              <button onclick="popOutTerminals()" class="btn-school-orange px-2.5 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1 shadow-sm" title="Open Public Terminal Window on Projector / TV">
+                <i class="bi bi-box-arrow-up-right"></i> POP OUT PUBLIC BROADCAST
+              </button>
+            </div>
+          </div>
+          <div id="live-answers" class="flex-1 min-h-0 overflow-y-auto custom-scrollbar grid grid-cols-1 md:grid-cols-2 gap-2.5 pr-1"></div>
+        </div>
+      </section>
+
+      <section id="result-panel" class="school-card p-3 sm:p-4 rounded-2xl flex flex-col gap-3 hidden flex-1 min-h-0 border-l-4 border-l-emerald-500">
+        <div class="recessed-orange p-3 rounded-xl flex items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-emerald-500 text-white flex items-center justify-center shrink-0 shadow-sm">
+              <i class="bi bi-check-circle-fill text-xl"></i>
+            </div>
+            <div>
+              <span class="text-[10px] font-bold uppercase text-emerald-700 tracking-wider">ROUND COMPLETED</span>
+              <p class="msg font-sans text-xs text-slate-700">
+                CORRECT SPELLING: <strong id="correct-word" class="text-school-blue font-mono font-bold uppercase text-sm"></strong>
+              </p>
+            </div>
+          </div>
+          <!-- STOP also available on result screen -->
+          <button onclick="requestStopMatch()" class="btn-school-danger px-3 py-1.5 rounded-lg text-[10px] font-bold flex items-center gap-1.5 shadow-sm">
+            <i class="bi bi-stop-circle-fill"></i>
+            <span>STOP / RESTART</span>
+          </button>
+        </div>
+        <div class="flex-1 min-h-0 flex flex-col gap-2">
+          <h3 class="text-[11px] font-heading font-bold uppercase tracking-wider text-school-blue">SUBMISSION BREAKDOWN</h3>
+          <div id="result-list" class="flex-1 min-h-0 overflow-y-auto custom-scrollbar space-y-2 pr-1"></div>
+        </div>
+
+        <button id="btn-next-round" onclick="nextRound()" class="btn-school-orange w-full text-white py-3.5 px-4 rounded-xl text-sm flex items-center justify-center gap-2.5 shadow-school-md mt-1">
+          <i class="bi bi-arrow-right-circle-fill text-xl"></i>
+          <span id="next-round-label">NEXT ROUND</span>
+        </button>
+      </section>
+
+      <section id="over-panel" class="school-card p-4 rounded-2xl flex flex-col gap-3 hidden flex-1 min-h-0 border-l-4 border-l-school-orange">
+        <div class="text-center space-y-1">
+          <div class="w-14 h-14 rounded-2xl bg-school-orange-light border-2 border-school-orange-border text-school-orange flex items-center justify-center mx-auto text-3xl shadow-sm">
+            <i class="bi bi-trophy-fill"></i>
+          </div>
+          <h2 class="text-xl font-bold font-heading uppercase tracking-wide text-school-blue">FINAL CHAMPIONSHIP STANDINGS</h2>
+          <p id="tie-note" class="text-xs text-slate-500 font-sans hidden">Tied players share the same rank</p>
+        </div>
+        <ol id="ranking" class="flex-1 min-h-0 overflow-y-auto custom-scrollbar space-y-2 list-none p-0 pr-1"></ol>
+      </section>
+    </div>
+
+    <div class="lg:col-span-5 flex flex-col gap-3 h-full min-h-0">
+      <div class="school-card-blue p-3.5 rounded-2xl flex flex-col gap-2.5 flex-1 min-h-0">
+        <div class="flex items-center justify-between pb-2 border-b border-school-blue-border/40">
+          <div class="flex items-center gap-2 font-heading font-bold text-xs text-school-blue uppercase">
+            <i class="bi bi-people-fill text-school-orange text-sm"></i>
+            <span>CONNECTED TERMINALS</span>
+          </div>
+          <span class="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-school-blue text-white shadow-sm">
+            <span id="player-count">0</span> LINKED
+          </span>
+        </div>
+        <div id="player-list" class="flex-1 min-h-0 overflow-y-auto custom-scrollbar space-y-2 pr-1">
+          <p class="msg text-xs text-slate-400 font-sans text-center py-8 italic">Awaiting active student terminals...</p>
+        </div>
+      </div>
+
+      <div id="words-panel" class="school-card p-3.5 rounded-2xl flex flex-col gap-2.5 hidden h-1/2 min-h-0 border-t-4 border-t-school-blue">
+        <div class="flex items-center justify-between pb-2 border-b border-school-orange-border font-heading font-bold text-xs text-school-blue uppercase">
+          <span class="flex items-center gap-2">
+            <i class="bi bi-journal-bookmark-fill text-school-orange"></i> MATCH WORD BANK
+          </span>
+        </div>
+        <div id="word-list" class="flex-1 min-h-0 overflow-y-auto custom-scrollbar space-y-2 text-xs pr-1"></div>
+      </div>
+    </div>
+  </main>
+
+  <div id="toast" class="fixed bottom-5 right-5 bg-school-blue text-white text-xs px-4 py-3 rounded-xl shadow-school-lg flex items-center gap-3 transition-all duration-300 opacity-0 translate-y-4 pointer-events-none z-50 border border-school-blue-border">
+    <i class="bi bi-info-circle-fill text-amber-300 text-base"></i>
+    <span id="toast-msg" class="font-sans font-medium">Notification</span>
+  </div>
+
+<script>
+const WS_URL = `ws://${location.hostname || 'localhost'}:8001`;
+let ws = null;
+let gameCode = null;
+let reconnectTimer = null;
+let lastPhase = null;
+let lastPaused = false;
+let audioEnabled = true;
+let currentTargetWord = "";
+let currentPhase = "lobby";
+let currentPaused = false;
+let lastState = null;
+
+let popoutWindow = null;
+const broadcastChannel = ('BroadcastChannel' in window) ? new BroadcastChannel('spelling_bee_live_stream') : null;
+
+// Modal state
+let pendingRemoveId = null;
+let pendingRemoveName = "";
+let modalMode = "remove"; // "remove" | "stop"
+
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+const bgAudio = document.getElementById("bg-audio");
+bgAudio.volume = 0.35;
+
+function startBgAudio() {
+  if (audioEnabled && bgAudio.paused && !currentPaused) {
+    bgAudio.play().catch(() => {});
+  }
+}
+
+function toggleAudio() {
+  audioEnabled = !audioEnabled;
+  const icon = document.getElementById("sound-icon");
+  const btn = document.getElementById("sound-toggle");
+  if (audioEnabled) {
+    icon.className = "bi bi-volume-up-fill text-white text-base";
+    btn.querySelector('span').textContent = "AUDIO: ON";
+    if (!currentPaused) bgAudio.play().catch(() => {});
+  } else {
+    icon.className = "bi bi-volume-mute-fill text-white/70 text-base";
+    btn.querySelector('span').textContent = "AUDIO: OFF";
+    bgAudio.pause();
+  }
+}
+
+function playSound(type) {
+  if (!audioEnabled) return;
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  if (type === 'start') {
+    osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.15);
+    gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.15);
+  } else if (type === 'tick') {
+    osc.frequency.setValueAtTime(580, audioCtx.currentTime);
+    gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.04);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.04);
+  } else if (type === 'over') {
+    osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+    osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1);
+    osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.2);
+    gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.35);
+  } else if (type === 'pause') {
+    osc.frequency.setValueAtTime(660, audioCtx.currentTime);
+    osc.frequency.setValueAtTime(440, audioCtx.currentTime + 0.09);
+    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.2);
+  } else if (type === 'resume') {
+    osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+    osc.frequency.setValueAtTime(660, audioCtx.currentTime + 0.09);
+    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.2);
+  }
+}
+
+const $ = id => document.getElementById(id);
+
+function esc(t) {
+  return String(t ?? "").replace(/[&<>"']/g, c => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[c]));
+}
+
+function showToast(text) {
+  const toast = $("toast");
+  $("toast-msg").textContent = text;
+  toast.classList.remove("opacity-0", "translate-y-4", "pointer-events-none");
+  setTimeout(() => {
+    toast.classList.add("opacity-0", "translate-y-4", "pointer-events-none");
+  }, 2200);
+}
+
+function copyGameCode() {
+  if (!gameCode || gameCode === '------') return;
+  const tempInput = document.createElement("input");
+  tempInput.value = gameCode;
+  document.body.appendChild(tempInput);
+  tempInput.select();
+  document.execCommand("copy");
+  document.body.removeChild(tempInput);
+  showToast("ROOM CODE COPIED TO CLIPBOARD!");
+}
+
+function show(...ids) {
+  ["create-panel","control-panel","game-panel","result-panel","words-panel","over-panel"]
+    .forEach(id => {
+      const el = $(id);
+      if (el) {
+        if (ids.includes(id)) el.classList.remove("hidden");
+        else el.classList.add("hidden");
+      }
+    });
+}
+
+function avatarImg(url, extraClass = "") {
+  if (!url) {
+    return `<div class="player-avatar ${extraClass} bg-school-blue text-white flex items-center justify-center font-bold text-[10px]">?</div>`;
+  }
+  return `<img class="player-avatar ${extraClass}" src="${url}" alt="" onerror="this.style.display='none'" />`;
+}
+
+// ---------------------------------------------------------------------------
+// MODERN CONFIRMATION MODAL (Remove Player + Stop Match)
+// ---------------------------------------------------------------------------
+function openConfirmModal(mode, playerId, playerName) {
+  modalMode = mode;
+  pendingRemoveId = playerId || null;
+  pendingRemoveName = playerName || "";
+
+  const iconWrap = $("modal-icon-wrap");
+  const icon = $("modal-icon");
+  const title = $("modal-title");
+  const message = $("modal-message");
+  const confirmLabel = $("modal-confirm-label");
+  const confirmIcon = $("modal-confirm-icon");
+
+  if (mode === "stop") {
+    iconWrap.className = "w-14 h-14 rounded-2xl bg-amber-50 border-2 border-amber-200 text-amber-600 flex items-center justify-center mx-auto mb-4 text-2xl shadow-sm";
+    icon.className = "bi bi-stop-circle-fill";
+    title.textContent = "Stop Match?";
+    message.innerHTML = `This will <strong class="text-school-blue">end the current match</strong> and return everyone to the lobby. All scores will be reset.`;
+    confirmLabel.textContent = "STOP MATCH";
+    confirmIcon.className = "bi bi-stop-circle-fill";
+  } else {
+    iconWrap.className = "w-14 h-14 rounded-2xl bg-rose-50 border-2 border-rose-200 text-rose-500 flex items-center justify-center mx-auto mb-4 text-2xl shadow-sm";
+    icon.className = "bi bi-person-x-fill";
+    title.textContent = "Remove Student?";
+    message.innerHTML = `Are you sure you want to remove <strong id="modal-player-name" class="text-school-blue">${esc(pendingRemoveName)}</strong> from this session?`;
+    confirmLabel.textContent = "REMOVE";
+    confirmIcon.className = "bi bi-trash3-fill";
+  }
+
+  $("confirm-modal").classList.add("show");
+}
+
+function closeConfirmModal() {
+  $("confirm-modal").classList.remove("show");
+  pendingRemoveId = null;
+  pendingRemoveName = "";
+  modalMode = "remove";
+}
+
+function confirmAction() {
+  if (modalMode === "stop") {
+    if (!gameCode) {
+      closeConfirmModal();
+      return;
+    }
+    if (!ws || ws.readyState !== WebSocket.OPEN) {
+      showToast("Not connected to server");
+      closeConfirmModal();
+      return;
+    }
+    send({ action: "reset_game", game_code: gameCode });
+    showToast("MATCH STOPPED – RETURNING TO LOBBY");
+    closeConfirmModal();
+    return;
+  }
+
+  // remove player
+  if (!pendingRemoveId || !gameCode) {
+    closeConfirmModal();
+    return;
+  }
+  if (!ws || ws.readyState !== WebSocket.OPEN) {
+    showToast("Not connected to server");
+    closeConfirmModal();
+    return;
+  }
+
+  send({
+    action: "remove_player",
+    game_code: gameCode,
+    player_id: String(pendingRemoveId)
+  });
+  showToast("PLAYER REMOVED");
+  closeConfirmModal();
+}
+
+$("modal-cancel").onclick = closeConfirmModal;
+$("modal-confirm").onclick = confirmAction;
+
+$("confirm-modal").addEventListener("click", (e) => {
+  if (e.target === $("confirm-modal")) closeConfirmModal();
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && $("confirm-modal").classList.contains("show")) {
+    closeConfirmModal();
+  }
+});
+
+// ---------------------------------------------------------------------------
+// REMOVE PLAYER
+// ---------------------------------------------------------------------------
+function removePlayer(playerId, playerName) {
+  if (!gameCode || !playerId) {
+    showToast("Cannot remove – missing data");
+    return;
+  }
+  openConfirmModal("remove", playerId, playerName);
+}
+
+// ---------------------------------------------------------------------------
+// STOP / RESTART MATCH (available while playing)
+// ---------------------------------------------------------------------------
+function requestStopMatch() {
+  if (!gameCode) return;
+  openConfirmModal("stop");
+}
+
+// ---------------------------------------------------------------------------
+// TIE-AWARE RANKING
+// ---------------------------------------------------------------------------
+function buildRankedList(ranking) {
+  if (!ranking || !ranking.length) return [];
+  const sorted = [...ranking].sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
+  const out = [];
+  let i = 0;
+  while (i < sorted.length) {
+    const score = sorted[i].score ?? 0;
+    let j = i;
+    while (j < sorted.length && (sorted[j].score ?? 0) === score) j++;
+    const rank = i + 1;
+    for (let k = i; k < j; k++) {
+      out.push({ ...sorted[k], rank, tied: (j - i) > 1 });
+    }
+    i = j;
+  }
+  return out;
+}
+
+// ---------------------------------------------------------------------------
+// PAUSE / PLAY
+// ---------------------------------------------------------------------------
+function togglePause() {
+  if (!gameCode) return;
+  send({ action: "toggle_pause", game_code: gameCode });
+}
+
+document.addEventListener("keydown", (e) => {
+  if (e.code !== "Space") return;
+  const tag = (e.target && e.target.tagName) || "";
+  if (tag === "INPUT" || tag === "TEXTAREA") return;
+  const btn = $("btn-pause");
+  if (btn && !btn.classList.contains("hidden")) {
+    e.preventDefault();
+    togglePause();
+  }
+});
+
+function updatePausedUI(phase, paused) {
+  const isActivePhase = ["countdown", "playing", "round_result"].includes(phase);
+  const btn = $("btn-pause");
+  const icon = $("pause-icon");
+  const label = $("pause-label");
+
+  if (isActivePhase) {
+    btn.classList.remove("hidden");
+    btn.classList.add("flex");
+  } else {
+    btn.classList.add("hidden");
+    btn.classList.remove("flex");
+  }
+
+  if (paused && isActivePhase) {
+    icon.className = "bi bi-play-fill text-white text-base";
+    label.textContent = "RESUME";
+    btn.classList.remove("btn-school-orange");
+    btn.classList.add("btn-school-green");
+    $("paused-banner").classList.remove("hidden");
+    document.body.classList.add("is-paused");
+  } else {
+    icon.className = "bi bi-pause-fill text-white text-base";
+    label.textContent = "PAUSE";
+    btn.classList.remove("btn-school-green");
+    btn.classList.add("btn-school-orange");
+    $("paused-banner").classList.add("hidden");
+    document.body.classList.remove("is-paused");
+  }
+
+  if (paused !== lastPaused) {
+    if (paused && isActivePhase) {
+      bgAudio.pause();
+      playSound('pause');
+      showToast("GAME PAUSED");
+    } else if (!paused) {
+      if (audioEnabled && isActivePhase) bgAudio.play().catch(() => {});
+      if (isActivePhase) {
+        playSound('resume');
+        showToast("GAME RESUMED");
+      }
+    }
+    lastPaused = paused;
+  }
+
+  currentPaused = !!(paused && isActivePhase);
+  updatePopoutPaused(currentPaused);
+}
+
+// ---------------------------------------------------------------------------
+// NEXT ROUND
+// ---------------------------------------------------------------------------
+function nextRound() {
+  if (!gameCode) return;
+  send({ action: "next_round", game_code: gameCode });
+  showToast("ADVANCING TO NEXT ROUND…");
+}
+
+// ---------------------------------------------------------------------------
+// POP OUT
+// ---------------------------------------------------------------------------
+function popOutTerminals() {
+  const w = 1080, h = 760;
+  const left = (screen.width/2) - (w/2);
+  const top = (screen.height/2) - (h/2);
+  const logoUrl = new URL("mes_logo.png", location.href).href;
+
+  popoutWindow = window.open("", "SpellingBee_LiveTerminals", `width=${w},height=${h},top=${top},left=${left},resizable=yes,scrollbars=yes,status=no`);
+
+  if (popoutWindow) {
+    popoutWindow.document.write(`
+      <!DOCTYPE html>
+      <html class="h-full">
+      <head>
+        <title>PUBLIC STAGE BROADCAST - SPELLING BEE</title>
+        <script src="https://cdn.tailwindcss.com"><\/script>
+        <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=JetBrains+Mono:wght@700;800&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+        <script>
+          tailwind.config = {
+            theme: {
+              extend: {
+                fontFamily: {
+                  sans: ['Plus Jakarta Sans', 'sans-serif'],
+                  heading: ['Fredoka', 'sans-serif'],
+                  mono: ['JetBrains Mono', 'monospace'],
+                },
+                colors: {
+                  school: {
+                    orange: '#fa8424',
+                    'orange-light': '#fef3ea',
+                    'orange-border': '#fcd2b2',
+                    blue: '#1c1b9d',
+                    'blue-dark': '#131273',
+                    'blue-border': '#b8b7e8',
+                    'blue-soft': '#f0f0fb'
+                  }
                 }
+              }
             }
-        }
-        
-        function updateGameState(gameState) {
-            players = gameState.players;
-            
-            // Check if game is complete
-            checkGameComplete(gameState);
-            
-            // Update player count
-            const playerCount = Object.keys(players).length;
-            document.getElementById('playerCount').textContent = playerCount;
-            
-            // Sort players by completion and WPM
-            const sortedPlayers = Object.entries(players).sort((a, b) => {
-                if (a[1].completed && !b[1].completed) return -1;
-                if (!a[1].completed && b[1].completed) return 1;
-                if (a[1].completed && b[1].completed) return b[1].wpm - a[1].wpm;
-                return b[1].progress - a[1].progress;
-            });
-            
-            // Render player list
-            const playerListDiv = document.getElementById('playerList');
-            
-            if (playerCount === 0) {
-                playerListDiv.innerHTML = '<div class="no-players">Waiting for students to join...</div>';
-                return;
-            }
-            
-            playerListDiv.innerHTML = sortedPlayers.map(([playerId, player], index) => {
-                const statusClass = player.completed ? 'status-finished' : 
-                                  gameState.started ? 'status-typing' : 'status-waiting';
-                const statusText = player.completed ? 'Finished!' : 
-                                 gameState.started ? 'Typing...' : 'Waiting';
-                
-                return `
-                    <div class="player-card ${player.completed ? 'completed' : ''}">
-                        <div class="player-rank">${player.completed ? '🏆' : index + 1}</div>
-                        <div class="player-name">${player.name}</div>
-                        <div class="player-stats">
-                            <div class="stat">
-                                <div class="stat-value">${Math.round(player.wpm)}</div>
-                                <div class="stat-label">WPM</div>
-                            </div>
-                            <div class="stat">
-                                <div class="stat-value">${Math.round(player.accuracy)}%</div>
-                                <div class="stat-label">Accuracy</div>
-                            </div>
-                            <div class="progress-bar-container">
-                                <div class="progress-bar" style="width: ${player.progress}%"></div>
-                            </div>
-                        </div>
-                        <div class="status-badge ${statusClass}">${statusText}</div>
-                    </div>
-                `;
-            }).join('');
-        }
-        
-        // Connect on page load
-        connectWebSocket();
-    </script>
+          }
+        <\/script>
+        <style>
+          body {
+            background-color: #fffcf8;
+            color: #1e293b;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-image: radial-gradient(#fa8424 0.75px, transparent 0.75px), radial-gradient(#1c1b9d 0.75px, #fffcf8 0.75px);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+          }
+          .school-card { background: #ffffff; border: 2px solid #fcd2b2; border-radius: 1rem; box-shadow: 0 4px 16px rgba(28, 27, 157, 0.08); }
+          .recessed-orange { background: #fef3ea; border: 1.5px solid #fcd2b2; border-radius: 0.75rem; }
+          .terminal-box { background-color: #0f172a; border: 1.5px solid #1e293b; border-radius: 0.65rem; color: #38bdf8; font-family: 'JetBrains Mono', monospace; box-shadow: inset 0 2px 4px rgba(0,0,0,0.4); }
+          .terminal-cursor { display: inline-block; width: 10px; height: 18px; background-color: #38bdf8; margin-left: 2px; animation: blink 1s infinite; vertical-align: middle; }
+          @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+          .player-avatar { width: 34px; height: 34px; border-radius: 0.6rem; border: 2px solid #b8b7e8; object-fit: cover; background: #f0f0fb; flex-shrink: 0; }
+          .player-avatar-xl { width: 56px; height: 56px; border-radius: 0.9rem; border-width: 3px; }
+          .champion-glow { box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.35), 0 10px 30px rgba(251, 191, 36, 0.35); }
+          @keyframes popIn { from { opacity: 0; transform: translateY(14px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+          .pop-in { animation: popIn 0.45s ease both; }
+          #popout-timer-ring { transition: stroke-dashoffset 1s linear, stroke 0.3s ease; }
+          @keyframes timerPulse { from { transform: scale(1); } to { transform: scale(1.08); } }
+          .timer-critical { animation: timerPulse 0.5s ease-in-out infinite alternate; }
+        </style>
+      </head>
+      <body class="p-4 sm:p-6 min-h-screen flex flex-col justify-between">
+        <div id="popout-paused" class="${currentPaused ? '' : 'hidden'} fixed inset-0 z-50 bg-school-blue-dark/80 flex flex-col items-center justify-center text-center">
+          <div class="w-28 h-28 rounded-3xl bg-amber-400 text-school-blue-dark flex items-center justify-center text-6xl shadow-2xl mb-5">
+            <i class="bi bi-pause-fill"></i>
+          </div>
+          <h2 class="text-5xl font-bold font-heading uppercase tracking-widest text-white">GAME PAUSED</h2>
+          <p class="text-amber-300 font-mono font-bold mt-3 tracking-wider">Please wait for the teacher to resume…</p>
+        </div>
+
+        <header class="bg-school-blue text-white rounded-2xl px-5 py-3 flex items-center justify-between gap-4 shadow-lg border-b-4 border-school-blue-dark mb-4">
+          <div class="flex items-center gap-4 min-w-0">
+            <div class="w-16 h-16 rounded-2xl bg-white p-2 flex items-center justify-center shadow-md shrink-0 border border-school-blue-border overflow-hidden">
+              <img src="${logoUrl}" alt="MES Logo" class="w-full h-full object-contain"
+                   onerror="this.style.display='none'; document.getElementById('popout-logo-fallback').classList.remove('hidden');" />
+              <div id="popout-logo-fallback" class="hidden text-school-orange text-3xl flex items-center justify-center">
+                <i class="bi bi-award-fill"></i>
+              </div>
+            </div>
+            <div class="min-w-0">
+              <h1 class="text-xl sm:text-2xl font-bold font-heading uppercase tracking-wide text-white leading-tight truncate">MATERA MATIBAY SPELLING BEE</h1>
+              <p class="text-xs text-amber-300 font-mono tracking-wider font-bold">PUBLIC STAGE STREAM BROADCAST</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 shrink-0">
+            <div class="bg-school-blue-dark px-4 py-2 rounded-xl flex items-center gap-3 border border-school-blue-border/40">
+              <div class="relative w-16 h-16 flex items-center justify-center">
+                <svg class="w-16 h-16 transform -rotate-90" viewBox="0 0 36 36">
+                  <path stroke="rgba(184,183,232,0.3)" stroke-width="4" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                  <path id="popout-timer-ring" stroke="#38bdf8" stroke-dasharray="100, 100" stroke-dashoffset="100" stroke-linecap="round" stroke-width="4" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                </svg>
+                <span id="popout-timer-num" class="absolute font-mono font-extrabold text-2xl text-sky-300">--</span>
+              </div>
+              <div class="flex flex-col text-left">
+                <span class="text-[9px] font-mono uppercase text-school-blue-border leading-none tracking-widest">TIMER</span>
+                <span id="popout-timer-label" class="font-mono font-bold text-sky-300 text-sm leading-tight uppercase tracking-wider mt-1">WAITING</span>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <section id="popout-word-banner" class="recessed-orange p-4 rounded-2xl mb-4 text-center border-2 border-school-orange-border shadow-sm">
+          <span id="popout-banner-label" class="text-[10px] font-bold uppercase font-sans tracking-widest text-school-orange block">SPELLING BEE IN PROGRESS</span>
+          <div id="popout-target-word" class="text-3xl sm:text-5xl font-extrabold font-mono text-school-blue tracking-widest uppercase my-1">••••••••</div>
+          <span id="popout-banner-sub" class="text-xs text-slate-500 font-sans italic">Listen carefully to the teacher and spell the target word!</span>
+        </section>
+
+        <main id="popout-terminals-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1 min-h-0">
+          <div class="col-span-full flex items-center justify-center text-slate-400 font-sans text-sm italic py-16">
+            Awaiting active round streaming transmission...
+          </div>
+        </main>
+
+        <section id="popout-standings" class="hidden flex-1 min-h-0 flex flex-col gap-4">
+          <div class="text-center">
+            <div class="w-20 h-20 rounded-3xl bg-amber-400 text-white flex items-center justify-center mx-auto text-5xl shadow-lg mb-2">
+              <i class="bi bi-trophy-fill"></i>
+            </div>
+            <h2 class="text-3xl sm:text-4xl font-bold font-heading uppercase tracking-widest text-school-blue">FINAL CHAMPIONSHIP STANDINGS</h2>
+            <p id="popout-champion-line" class="text-sm font-mono font-bold text-school-orange tracking-wider mt-1"></p>
+            <p id="popout-tie-note" class="text-xs text-slate-500 mt-1 hidden">Tied players share the same rank</p>
+          </div>
+          <ol id="popout-ranking" class="flex-1 min-h-0 overflow-y-auto space-y-3 list-none p-0 pr-1"></ol>
+        </section>
+      </body>
+      </html>
+    `);
+    popoutWindow.document.close();
+
+    setTimeout(() => {
+      updatePopoutWord(currentTargetWord, currentPhase);
+      renderPopoutView(lastState);
+    }, 150);
+  }
+}
+
+function updatePopoutPaused(paused) {
+  if (popoutWindow && !popoutWindow.closed) {
+    const el = popoutWindow.document.getElementById("popout-paused");
+    if (el) {
+      if (paused) el.classList.remove("hidden");
+      else el.classList.add("hidden");
+    }
+  }
+}
+
+function updatePopoutWord(word, phase) {
+  currentTargetWord = word || "";
+  currentPhase = phase || "lobby";
+  if (popoutWindow && !popoutWindow.closed) {
+    const wordEl = popoutWindow.document.getElementById("popout-target-word");
+    const labelEl = popoutWindow.document.getElementById("popout-banner-label");
+    const subEl = popoutWindow.document.getElementById("popout-banner-sub");
+    const revealAnswer = (phase === 'round_result' || phase === 'game_over');
+
+    if (wordEl) {
+      if (revealAnswer && currentTargetWord) {
+        wordEl.textContent = currentTargetWord.toUpperCase();
+        wordEl.className = "text-3xl sm:text-5xl font-extrabold font-mono text-emerald-600 tracking-widest uppercase my-1";
+      } else {
+        wordEl.textContent = "••••••••";
+        wordEl.className = "text-3xl sm:text-5xl font-extrabold font-mono text-school-blue tracking-widest uppercase my-1";
+      }
+    }
+    if (labelEl) labelEl.textContent = revealAnswer ? "CORRECT TARGET WORD" : "SPELLING BEE IN PROGRESS";
+    if (subEl) subEl.textContent = revealAnswer ? "Official word spelling verified" : "Listen carefully to the teacher and spell the target word!";
+  }
+}
+
+function updatePopoutTimer(s, doc) {
+  const numEl = doc.getElementById("popout-timer-num");
+  const ringEl = doc.getElementById("popout-timer-ring");
+  const labelEl = doc.getElementById("popout-timer-label");
+  if (!numEl || !ringEl || !labelEl) return;
+
+  const max = s.timer_seconds || 20;
+  let text = "--", label = "WAITING", color = "#38bdf8", pct = 0, critical = false;
+
+  if (s.phase === "playing") {
+    const t = Number(s.time_left);
+    label = "TIME LEFT";
+    if (!isNaN(t)) {
+      text = String(t);
+      pct = Math.max(0, Math.min(1, t / max));
+      color = pct < 0.25 ? "#f43f5e" : (pct < 0.5 ? "#f59e0b" : "#38bdf8");
+      critical = pct < 0.25 && !s.paused;
+    }
+    if (s.paused) { label = "PAUSED"; color = "#94a3b8"; }
+  }
+  else if (s.phase === "countdown") {
+    text = "GO"; label = "GET READY"; pct = 1; color = "#fbbf24";
+  }
+  else if (s.phase === "round_result") {
+    text = "0"; label = "TIME'S UP"; pct = 0; color = "#34d399";
+  }
+  else if (s.phase === "game_over") {
+    text = "END"; label = "MATCH OVER"; pct = 0; color = "#fbbf24";
+  }
+
+  numEl.textContent = text;
+  numEl.style.color = color;
+  numEl.style.fontSize = text.length > 2 ? "1.05rem" : "";
+  numEl.classList.toggle("timer-critical", critical);
+  labelEl.style.color = color;
+  ringEl.setAttribute("stroke", color);
+  ringEl.style.strokeDashoffset = String(100 - pct * 100);
+}
+
+function popoutScoreBadge(score) {
+  return `<span class="text-sm font-mono font-black text-school-orange bg-school-orange-light border border-school-orange-border px-3 py-1 rounded-lg whitespace-nowrap">${esc(score)} PTS</span>`;
+}
+
+function renderPopoutView(s) {
+  if (!s || !popoutWindow || popoutWindow.closed) return;
+  const doc = popoutWindow.document;
+
+  updatePopoutTimer(s, doc);
+
+  const banner = doc.getElementById("popout-word-banner");
+  const grid = doc.getElementById("popout-terminals-grid");
+  const standings = doc.getElementById("popout-standings");
+  if (!banner || !grid || !standings) return;
+
+  const entries = Object.entries(s.players || {});
+
+  if (s.phase === "game_over") {
+    banner.classList.add("hidden");
+    grid.classList.add("hidden");
+    standings.classList.remove("hidden");
+
+    const ranked = buildRankedList(s.ranking || []);
+    const hasTies = ranked.some(e => e.tied);
+    const champLine = doc.getElementById("popout-champion-line");
+    const tieNote = doc.getElementById("popout-tie-note");
+    if (tieNote) {
+      if (hasTies) tieNote.classList.remove("hidden");
+      else tieNote.classList.add("hidden");
+    }
+
+    if (champLine) {
+      const top = ranked.filter(e => e.rank === 1);
+      if (top.length === 1) {
+        champLine.textContent = `CHAMPION: ${String(top[0].name || "").toUpperCase()}  •  ${top[0].score} PTS`;
+      } else if (top.length > 1) {
+        champLine.textContent = `CO-CHAMPIONS: ${top.map(t => String(t.name || "").toUpperCase()).join(" & ")}  •  ${top[0].score} PTS`;
+      } else {
+        champLine.textContent = "";
+      }
+    }
+
+    const rankStyles = {
+      1: { row: "bg-amber-50 border-amber-400 champion-glow", badge: "bg-amber-400 text-white", name: "text-3xl", score: "text-4xl" },
+      2: { row: "bg-slate-50 border-slate-300", badge: "bg-slate-300 text-slate-700", name: "text-2xl", score: "text-3xl" },
+      3: { row: "bg-orange-50 border-orange-300", badge: "bg-amber-600 text-white", name: "text-2xl", score: "text-3xl" },
+    };
+
+    doc.getElementById("popout-ranking").innerHTML = ranked.map((e, i) => {
+      const st = rankStyles[e.rank] || { row: "bg-white border-school-orange-border", badge: "bg-school-blue-soft border border-school-blue-border text-school-blue", name: "text-xl", score: "text-2xl" };
+      const badgeInner = e.rank === 1 ? '<i class="bi bi-trophy-fill"></i>' : e.rank;
+      const tieBadge = e.tied
+        ? '<span class="text-[10px] font-bold uppercase tracking-wider text-amber-700 bg-amber-100 border border-amber-300 px-2 py-0.5 rounded-md ml-2">TIE</span>'
+        : '';
+      const avatar = e.avatar ? `<img class="player-avatar player-avatar-xl" src="${esc(e.avatar)}" alt="" />` : "";
+      return `
+        <li class="pop-in flex items-center justify-between gap-4 rounded-2xl border-2 px-5 py-4 ${st.row}" style="animation-delay:${i * 0.08}s">
+          <div class="flex items-center gap-4 min-w-0">
+            <div class="w-14 h-14 rounded-2xl ${st.badge} flex items-center justify-center font-heading font-bold text-2xl shrink-0 shadow-sm">${badgeInner}</div>
+            ${avatar}
+            <div class="min-w-0 flex items-center">
+              <span class="${st.name} font-extrabold font-heading text-school-blue uppercase tracking-wide truncate">${esc(e.name)}</span>
+              ${tieBadge}
+            </div>
+          </div>
+          <div class="text-right shrink-0">
+            <span class="${st.score} font-black font-mono text-school-orange">${esc(e.score)}</span>
+            <span class="text-xs font-mono font-bold text-slate-500 ml-1">PTS</span>
+          </div>
+        </li>`;
+    }).join("") || '<li class="text-center text-slate-400 italic py-10">No players.</li>';
+    return;
+  }
+
+  banner.classList.remove("hidden");
+  grid.classList.remove("hidden");
+  standings.classList.add("hidden");
+
+  if (s.phase === "playing") {
+    grid.innerHTML = entries.map(([pid, p]) => `
+      <div class="school-card p-4 flex flex-col gap-3">
+        <div class="flex items-center justify-between gap-2">
+          <div class="flex items-center gap-3 min-w-0">
+            <img class="player-avatar" src="${esc(p.avatar || '')}" alt="" />
+            <span class="text-sm font-extrabold font-heading text-school-blue uppercase tracking-wide truncate">${esc(p.name)}</span>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            ${popoutScoreBadge(p.score)}
+            ${p.answered
+              ? '<span class="text-[10px] font-mono font-bold text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-md border border-emerald-300">SUBMITTED</span>'
+              : '<span class="text-[10px] font-mono font-bold text-amber-700 bg-amber-100 px-2.5 py-1 rounded-md border border-amber-300">SPELLING...</span>'}
+          </div>
+        </div>
+        <div class="terminal-box p-3 text-lg flex items-center justify-between">
+          <div class="truncate flex items-center">
+            <span class="text-slate-500 mr-2">&gt;</span>
+            <span id="popout-term-${esc(pid)}" class="text-sky-300 font-black uppercase tracking-widest">${esc(p.live_input || '')}</span>
+            <span class="terminal-cursor"></span>
+          </div>
+        </div>
+      </div>
+    `).join("") || '<div class="col-span-full text-center text-slate-400 italic py-16">No players connected.</div>';
+  }
+  else if (s.phase === "round_result") {
+    const res = s.last_results || {};
+    const rows = Object.entries(res).sort((a, b) => (b[1].score || 0) - (a[1].score || 0));
+    grid.innerHTML = rows.map(([pid, r]) => `
+      <div class="school-card p-4 flex flex-col gap-3 ${r.correct ? '!border-emerald-300' : '!border-rose-300'}">
+        <div class="flex items-center justify-between gap-2">
+          <div class="flex items-center gap-3 min-w-0">
+            <img class="player-avatar" src="${esc(r.avatar || '')}" alt="" />
+            <span class="text-sm font-extrabold font-heading text-school-blue uppercase tracking-wide truncate">${esc(r.name)}</span>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            ${popoutScoreBadge(r.score)}
+            ${r.correct
+              ? '<span class="text-[10px] font-mono font-bold text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-md border border-emerald-300"><i class="bi bi-check-circle-fill"></i> CORRECT +1</span>'
+              : '<span class="text-[10px] font-mono font-bold text-rose-700 bg-rose-100 px-2.5 py-1 rounded-md border border-rose-300"><i class="bi bi-x-circle-fill"></i> WRONG</span>'}
+          </div>
+        </div>
+        <div class="terminal-box p-3 text-lg truncate">
+          <span class="text-slate-500 mr-2">&gt;</span>
+          <span class="${r.correct ? 'text-emerald-400' : 'text-rose-400'} font-black uppercase tracking-widest">${esc(r.answer || '(NO ANSWER)')}</span>
+        </div>
+      </div>
+    `).join("") || '<div class="col-span-full text-center text-slate-400 italic py-16">No submissions.</div>';
+  }
+  else if (s.phase === "countdown") {
+    grid.innerHTML = `<div class="col-span-full flex flex-col items-center justify-center text-school-blue font-heading font-bold text-3xl uppercase tracking-widest py-16 gap-3">
+      <i class="bi bi-hourglass-split text-school-orange text-5xl"></i> GET READY…
+    </div>`;
+  }
+  else {
+    grid.innerHTML = `<div class="col-span-full flex items-center justify-center text-slate-400 font-sans text-sm italic py-16">
+      Waiting for the match to start… ${entries.length} player${entries.length === 1 ? '' : 's'} connected.
+    </div>`;
+  }
+}
+
+function broadcastTypingUpdate(playerId, playerName, text) {
+  if (popoutWindow && !popoutWindow.closed) {
+    const termEl = popoutWindow.document.getElementById(`popout-term-${playerId}`);
+    if (termEl) termEl.textContent = text || "";
+  }
+  if (broadcastChannel) {
+    broadcastChannel.postMessage({ type: 'typing', playerId, text, targetWord: currentTargetWord });
+  }
+}
+
+function connect() {
+  ws = new WebSocket(WS_URL);
+  ws.onopen = () => {
+    $("conn-status").textContent = "ONLINE";
+    $("conn-status").className = "font-mono font-bold text-amber-300 text-[11px] leading-tight uppercase tracking-wider";
+    $("conn-dot").className = "relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400";
+    $("conn-dot-ping").className = "animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-300 opacity-75";
+    if (reconnectTimer) { clearInterval(reconnectTimer); reconnectTimer = null; }
+  };
+  ws.onclose = () => {
+    $("conn-status").textContent = "DISCONNECTED";
+    $("conn-status").className = "font-mono font-bold text-rose-300 text-[11px] leading-tight uppercase tracking-wider";
+    $("conn-dot").className = "relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-400";
+    $("conn-dot-ping").className = "animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-300 opacity-75";
+    if (!reconnectTimer) reconnectTimer = setInterval(connect, 2000);
+  };
+  ws.onerror = () => ws.close();
+  ws.onmessage = (ev) => handle(JSON.parse(ev.data));
+}
+
+function send(obj) {
+  if (ws && ws.readyState === 1) ws.send(JSON.stringify(obj));
+}
+
+function handle(msg) {
+  if (msg.type === "game_created") {
+    gameCode = msg.game_code;
+    $("game-code").textContent = gameCode;
+    show("control-panel");
+    renderState(msg.game_state);
+    showToast("ROOM SESSION CREATED!");
+  }
+  else if (msg.type === "game_state") {
+    renderState(msg.game_state);
+  }
+  else if (msg.type === "student_typing_update") {
+    const termTextEl = document.getElementById(`live-terminal-${msg.player_id}`);
+    if (termTextEl) {
+      termTextEl.textContent = msg.current_input || "";
+    }
+    broadcastTypingUpdate(msg.player_id, msg.player_name, msg.current_input);
+  }
+  else if (msg.type === "error") {
+    $("control-msg").textContent = msg.message;
+  }
+}
+
+function updateTimerRing(secondsLeft) {
+  const ring = document.getElementById("timer-ring");
+  if (!ring) return;
+  const max = parseInt($("timer").value, 10) || 20;
+  const num = parseInt(secondsLeft, 10);
+  if (isNaN(num)) {
+    ring.style.strokeDashoffset = 0;
+    return;
+  }
+  const pct = Math.max(0, Math.min(1, num / max));
+  const offset = 100 - (pct * 100);
+  ring.style.strokeDashoffset = offset;
+  if (pct < 0.25) {
+    ring.setAttribute("class", "timer-ring-circle text-rose-500");
+  } else if (pct < 0.5) {
+    ring.setAttribute("class", "timer-ring-circle text-amber-500");
+  } else {
+    ring.setAttribute("class", "timer-ring-circle text-school-orange");
+  }
+}
+
+function renderState(s) {
+  if (!s) return;
+  lastState = s;
+
+  if (s.phase !== lastPhase) {
+    if (s.phase === "playing") playSound('start');
+    if (s.phase === "game_over") playSound('over');
+    lastPhase = s.phase;
+  }
+
+  updatePausedUI(s.phase, !!s.paused);
+
+  const players = Object.values(s.players || {});
+  const playerEntries = Object.entries(s.players || {});
+  $("player-count").textContent = players.length;
+
+  // Connected terminals — remove button always available
+  $("player-list").innerHTML = playerEntries.map(([pid, p]) => `
+  <div class="recessed-blue p-2.5 rounded-xl flex items-center justify-between shadow-sm gap-2">
+      <div class="flex items-center gap-2.5 min-w-0 flex-1">
+        ${avatarImg(p.avatar)}
+        <span class="text-xs font-bold text-school-blue font-sans truncate">${esc(p.name)}</span>
+      </div>
+      <div class="flex items-center gap-1.5 font-mono shrink-0">
+        <span class="text-xs font-bold text-school-orange">${p.score} PTS</span>
+        ${p.answered
+          ? '<span class="text-emerald-600 text-[10px] bg-emerald-100 px-2 py-0.5 rounded-md font-sans font-bold border border-emerald-200"><i class="bi bi-check-lg"></i></span>'
+          : '<span class="text-slate-400 text-[10px] bg-white px-2 py-0.5 rounded-md border border-slate-200"><i class="bi bi-hourglass-split"></i></span>'}
+        <button type="button"
+                class="btn-remove"
+                title="Remove ${esc(p.name)}"
+                data-pid="${pid}"
+                data-name="${esc(p.name)}"
+                onclick="removePlayer(this.dataset.pid, this.dataset.name)">
+          <i class="bi bi-trash3 text-sm"></i>
+        </button>
+      </div>
+    </div>
+  `).join("") || '<p class="msg text-xs text-slate-400 font-sans text-center py-8 italic">Awaiting active student terminals...</p>';
+
+  if (s.word_list && s.word_list.length) {
+    $("words-panel").classList.remove("hidden");
+    $("word-list").innerHTML = s.word_list.map((w, i) => `
+      <div class="recessed-orange p-2.5 rounded-xl space-y-1">
+        <div class="flex items-center gap-1.5">
+          <span class="w font-mono font-bold text-school-blue text-xs">${i + 1}. ${esc(w.word.toUpperCase())}</span>
+        </div>
+        <div class="text-slate-600 text-[11px] italic leading-snug">${esc(w.definition)}</div>
+      </div>
+    `).join("");
+  }
+
+  if (s.phase === "lobby") {
+    show("control-panel", s.word_list ? "words-panel" : null);
+    $("btn-start").disabled = false;
+    $("btn-reset").classList.add("hidden");
+    $("control-msg").textContent = "";
+    updatePopoutWord("", s.phase);
+  }
+  else if (s.phase === "countdown") {
+    show("game-panel");
+    $("time-left").textContent = "--";
+    updateTimerRing(0);
+    $("btn-start").disabled = true;
+    updatePopoutWord(s.word || "", s.phase);
+  }
+  else if (s.phase === "playing") {
+    show("game-panel", "words-panel");
+    $("round-num").textContent = s.current_round;
+    $("total-rounds").textContent = s.total_rounds;
+
+    const remainingSec = s.time_left ?? "--";
+    $("time-left").textContent = remainingSec;
+    updateTimerRing(remainingSec);
+    $("countdown-label").textContent = s.paused ? "PAUSED" : "COUNTDOWN";
+
+    const wordText = (s.word || "").toUpperCase();
+    $("teacher-word").textContent = wordText;
+    $("teacher-def").textContent = s.definition || "";
+    $("first-letter").textContent = s.first_letter || "";
+    $("letter-count").textContent = s.letter_count || "";
+
+    updatePopoutWord(wordText, s.phase);
+
+    $("live-answers").innerHTML = playerEntries.map(([pid, p]) => `
+      <div class="recessed-orange p-3 rounded-xl flex flex-col gap-2 font-sans shadow-sm border border-school-orange-border/80">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2 min-w-0">
+            ${avatarImg(p.avatar)}
+            <span class="text-xs font-extrabold text-school-blue truncate">${esc(p.name)}</span>
+          </div>
+          ${p.answered
+            ? '<span class="text-[9px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-md border border-emerald-300 flex items-center gap-1 shrink-0"><i class="bi bi-check-circle-fill"></i> LOCKED</span>'
+            : (s.paused
+                ? '<span class="text-[9px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-300 flex items-center gap-1 shrink-0"><i class="bi bi-pause-fill"></i> PAUSED</span>'
+                : '<span class="text-[9px] font-bold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-md border border-amber-300 flex items-center gap-1 shrink-0"><i class="bi bi-pencil-fill animate-pulse"></i> TYPING</span>')}
+        </div>
+        <div class="terminal-box px-3 py-2 flex items-center justify-between text-xs font-mono">
+          <div class="truncate flex items-center">
+            <span class="text-slate-500 mr-1.5 select-none">&gt;</span>
+            <span id="live-terminal-${pid}" class="text-sky-300 font-bold uppercase tracking-wider">${esc(p.live_input || "")}</span>
+            <span class="terminal-cursor"></span>
+          </div>
+          <span class="text-[8px] text-slate-500 uppercase tracking-widest font-sans ml-2 shrink-0">RAW FEED</span>
+        </div>
+      </div>
+    `).join("");
+    $("btn-start").disabled = true;
+  }
+  else if (s.phase === "round_result") {
+    show("result-panel", "words-panel");
+    $("correct-word").textContent = (s.correct_word || "").toUpperCase();
+    updatePopoutWord(s.correct_word || "", s.phase);
+
+    const res = s.last_results || {};
+    $("result-list").innerHTML = Object.values(res).map(r => `
+      <div class="p-2.5 rounded-xl border text-xs ${r.correct ? 'border-emerald-300 bg-emerald-50' : 'border-rose-300 bg-rose-50'} flex items-center justify-between font-sans shadow-sm">
+        <div class="flex items-center gap-2 min-w-0">
+          ${avatarImg(r.avatar)}
+          <i class="bi ${r.correct ? 'bi-check-circle-fill text-emerald-600' : 'bi-x-circle-fill text-rose-500'} text-sm shrink-0"></i>
+          <span class="font-bold text-school-blue shrink-0">${esc(r.name)}:</span>
+          <span class="${r.correct ? 'text-emerald-800 font-bold' : 'text-rose-700 font-semibold'} truncate">"${esc(r.answer || '(NO RESPONSE)')}"</span>
+        </div>
+        <span class="font-bold text-school-orange font-mono shrink-0 ml-2">${r.score} PTS</span>
+      </div>
+    `).join("");
+
+    const nextLabel = $("next-round-label");
+    const isLastRound = (s.current_round || 0) >= (s.total_rounds || 1);
+    if (nextLabel) nextLabel.textContent = isLastRound ? "FINISH MATCH" : "NEXT ROUND";
+  }
+  else if (s.phase === "game_over") {
+    show("control-panel", "over-panel", "words-panel");
+    $("btn-reset").classList.remove("hidden");
+    $("btn-start").disabled = true;
+
+    updatePopoutWord(s.correct_word || "", s.phase);
+
+    const ranked = buildRankedList(s.ranking || []);
+    const hasTies = ranked.some(e => e.tied);
+    const tieNote = $("tie-note");
+    if (tieNote) {
+      if (hasTies) tieNote.classList.remove("hidden");
+      else tieNote.classList.add("hidden");
+    }
+
+    const getRankBadge = (rank, tied) => {
+      if (rank === 1) {
+        return `<div class="w-7 h-7 rounded-lg bg-amber-400 text-white flex items-center justify-center font-bold text-xs shadow-sm" title="${tied ? 'Tied for 1st' : '1st'}">
+          <i class="bi bi-trophy-fill"></i>
+        </div>`;
+      }
+      if (rank === 2) {
+        return `<div class="w-7 h-7 rounded-lg bg-slate-300 text-slate-700 flex items-center justify-center font-bold text-xs shadow-sm">${rank}</div>`;
+      }
+      if (rank === 3) {
+        return `<div class="w-7 h-7 rounded-lg bg-amber-600 text-white flex items-center justify-center font-bold text-xs shadow-sm">${rank}</div>`;
+      }
+      return `<div class="w-7 h-7 rounded-lg bg-school-blue-soft border border-school-blue-border text-school-blue flex items-center justify-center font-bold text-xs">${rank}</div>`;
+    };
+
+    $("ranking").innerHTML = ranked.map((entry) => {
+      const name = entry.name ?? "???";
+      const score = entry.score ?? 0;
+      const avatar = entry.avatar ?? null;
+      const tieLabel = entry.tied
+        ? '<span class="text-[9px] font-bold uppercase tracking-wider text-amber-700 bg-amber-100 border border-amber-300 px-1.5 py-0.5 rounded ml-1.5">TIE</span>'
+        : '';
+      return `
+        <li class="flex justify-between items-center bg-white border border-school-orange-border p-3 rounded-xl shadow-sm gap-2">
+          <div class="flex items-center gap-2.5 min-w-0">
+            ${getRankBadge(entry.rank, entry.tied)}
+            ${avatarImg(avatar, "player-avatar-lg")}
+            <span class="font-bold text-school-blue text-sm truncate">${esc(name)}</span>
+            ${tieLabel}
+          </div>
+          <span class="text-school-orange font-black font-mono text-sm shrink-0">${score} PTS</span>
+        </li>
+      `;
+    }).join("") || '<li class="text-center text-slate-400 italic py-6">No players.</li>';
+  }
+
+  renderPopoutView(s);
+}
+
+$("btn-create").onclick = () => {
+  startBgAudio();
+  send({ action: "create_game" });
+};
+
+$("btn-config").onclick = () => {
+  const r = parseInt($("rounds").value, 10);
+  const t = parseInt($("timer").value, 10);
+  send({ action: "set_config", game_code: gameCode, rounds: r, timer: t });
+  showToast("CONFIG UPDATED!");
+};
+
+$("btn-start").onclick = () => {
+  startBgAudio();
+  send({ action: "start_game", game_code: gameCode });
+};
+
+$("btn-reset").onclick = () => {
+  requestStopMatch(); // also uses the nice modal
+};
+
+connect();
+</script>
 </body>
 </html>
